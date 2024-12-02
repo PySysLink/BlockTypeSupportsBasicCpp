@@ -1,0 +1,9 @@
+@PACKAGE_INIT@
+
+# Specify the include directories and libraries
+set_and_check(BLOCK_TYPE_SUPPORTS_BASIC_CPP_SUPPORT_INCLUDE_DIRS "@PACKAGE_INCLUDE_DIRS@")
+set_and_check(BLOCK_TYPE_SUPPORTS_BASIC_CPP_SUPPORT_LIBRARIES "@PACKAGE_LIBRARIES@")
+
+# Set include directories for BlockTypeSupportsBasicCppSupport
+set(BlockTypeSupportsBasicCppSupport_INCLUDE_DIRS "${CMAKE_INSTALL_PREFIX}/include")
+set(BlockTypeSupportsBasicCppSupport_LIBRARIES "@PACKAGE_LIBRARIES@")
