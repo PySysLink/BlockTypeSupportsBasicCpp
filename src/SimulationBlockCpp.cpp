@@ -33,11 +33,16 @@ namespace BlockTypeSupports::BasicCppSupport
         std::cout << "Ports configured..." << std::endl;
 
         std::vector<BlockTypes::BasicCpp::SampleTime> sampleTimesCpp = this->simulationBlock->GetSampleTimes();
+        this->sampleTimes = {};
+        for (int i = 0; i < sampleTimesCpp.size(); i++)
+        {
+            this->sampleTimes.push_back(SampleTimeConversion::CppSampleTimeToPySysLink(sampleTimesCpp[i]));
+        }
 
         std::cout << "Basic simulation block cpp created" << std::endl;
     }
 
-    const std::vector<PySysLinkBase::SampleTime>& SimulationBlockCpp::GetSampleTimes() const
+    std::vector<PySysLinkBase::SampleTime>& SimulationBlockCpp::GetSampleTimes()
     {
         return this->sampleTimes;
     }

@@ -30,7 +30,7 @@ namespace BlockTypeSupports::BasicCppSupport
             const std::string GetName() const;
 
             SimulationBlockCpp(std::unique_ptr<BlockTypes::BasicCpp::SimulationBlock> simulationBlock, std::map<std::string, PySysLinkBase::ConfigurationValue> blockConfiguration);
-            const std::vector<PySysLinkBase::SampleTime>& GetSampleTimes() const;
+            std::vector<PySysLinkBase::SampleTime>& GetSampleTimes();
 
             std::vector<std::shared_ptr<PySysLinkBase::InputPort>> GetInputPorts() const;
             const std::vector<std::shared_ptr<PySysLinkBase::OutputPort>> GetOutputPorts() const;
