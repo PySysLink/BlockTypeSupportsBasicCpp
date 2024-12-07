@@ -22,8 +22,8 @@ namespace BlockTypeSupports::BasicCppSupport
             std::string id;
             std::string name;
         protected:
-            std::vector<std::unique_ptr<PySysLinkBase::InputPort>> inputPorts;
-            std::vector<std::unique_ptr<PySysLinkBase::OutputPort>> outputPorts;
+            std::vector<std::shared_ptr<PySysLinkBase::InputPort>> inputPorts;
+            std::vector<std::shared_ptr<PySysLinkBase::OutputPort>> outputPorts;
 
         public:
             const std::string GetId() const;
@@ -32,10 +32,10 @@ namespace BlockTypeSupports::BasicCppSupport
             SimulationBlockCpp(std::unique_ptr<BlockTypes::BasicCpp::SimulationBlock> simulationBlock, std::map<std::string, PySysLinkBase::ConfigurationValue> blockConfiguration);
             const std::vector<PySysLinkBase::SampleTime>& GetSampleTimes() const;
 
-            std::vector<std::unique_ptr<PySysLinkBase::InputPort>>& GetInputPorts();
-            const std::vector<std::unique_ptr<PySysLinkBase::OutputPort>>& GetOutputPorts() const;
+            std::vector<std::shared_ptr<PySysLinkBase::InputPort>> GetInputPorts() const;
+            const std::vector<std::shared_ptr<PySysLinkBase::OutputPort>> GetOutputPorts() const;
 
-            const std::vector<std::unique_ptr<PySysLinkBase::OutputPort>>& ComputeOutputsOfBlock(PySysLinkBase::SampleTime sampleTime);
+            const std::vector<std::shared_ptr<PySysLinkBase::OutputPort>> ComputeOutputsOfBlock(PySysLinkBase::SampleTime sampleTime);
     };
 }
 

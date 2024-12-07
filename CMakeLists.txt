@@ -57,7 +57,7 @@ include(CMakePackageConfigHelpers)
 # Generate the package configuration file for BlockTypeSupportsBasicCppSupport
 install(EXPORT BlockTypeSupportsBasicCppSupportTargets
     FILE BlockTypeSupportsBasicCppSupportTargets.cmake
-    NAMESPACE BlockTypes::BasicCpp::
+    NAMESPACE BlockTypeSupports::BasicCppSupport::
     DESTINATION lib/cmake/BlockTypeSupportsBasicCppSupport
 )
 
@@ -81,3 +81,8 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/BlockTypeSupportsBasicCppSupportConfig
 install(TARGETS BlockTypeSupportsBasicCppSupport
         ARCHIVE DESTINATION lib
         LIBRARY DESTINATION lib)
+
+
+if(UNIX AND NOT APPLE) # Linux-specific
+    install(CODE "execute_process(COMMAND ldconfig)")
+endif()

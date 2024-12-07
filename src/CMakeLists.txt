@@ -3,6 +3,7 @@ add_library(BlockTypeSupportsBasicCppSupport SHARED RegisterBlockFactories.cpp
             SampleTimeConversion.cpp
             SimulationBlockCpp.cpp
             BlockFactoryCpp.cpp
+            BlockLibrariesPlugingLoader.cpp
             RegisterBlockFactories.cpp)
 
 target_link_libraries(BlockTypeSupportsBasicCppSupport PRIVATE PySysLinkBase)

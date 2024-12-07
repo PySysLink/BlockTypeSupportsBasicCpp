@@ -2,14 +2,16 @@
 #define SRC_BLOCK_TYPE_SUPPORTS_BASIC_CPP_SUPPORT_BLOCK_FACTORY_CPP
 
 #include <PySysLinkBase/IBlockFactory.h>
+#include <BlockTypes/BasicCpp/IBasicCppBlockFactory.h>
 
 namespace BlockTypeSupports::BasicCppSupport
 {
     class BlockFactoryCpp : public PySysLinkBase::IBlockFactory
     {
+        private:
+            std::map<std::string, std::unique_ptr<BlockTypes::BasicCpp::IBasicCppBlockFactory>> factoryRegistry;
         public:
             BlockFactoryCpp();
-            // virtual ~BlockFactoryCpp();
             std::unique_ptr<PySysLinkBase::ISimulationBlock> CreateBlock(std::map<std::string, PySysLinkBase::ConfigurationValue> blockConfiguration);
     };
 } // namespace BlockTypeSupports::BasicCppSupport

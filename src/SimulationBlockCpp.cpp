@@ -20,13 +20,13 @@ namespace BlockTypeSupports::BasicCppSupport
         for (int i = 0; i < this->simulationBlock->GetInputPortAmmount(); i++)
         {
             std::unique_ptr<PySysLinkBase::UnknownTypeSignalValue> signalValue = std::make_unique<PySysLinkBase::SignalValue<double>>(PySysLinkBase::SignalValue<double>(0.0));
-            auto inputPort = std::make_unique<PySysLinkBase::InputPort>(PySysLinkBase::InputPort(inputsHasDirectFeedthrough[i], std::move(signalValue)));
+            auto inputPort = std::make_unique<PySysLinkBase::InputPort>(PySysLinkBase::InputPort(inputsHasDirectFeedthrough[i], std::move(signalValue), *this));
             this->inputPorts.push_back(std::move(inputPort));
         }
         for (int i = 0; i < this->simulationBlock->GetOutputPortAmmount(); i++)
         {
             std::unique_ptr<PySysLinkBase::UnknownTypeSignalValue> signalValue = std::make_unique<PySysLinkBase::SignalValue<double>>(PySysLinkBase::SignalValue<double>(0.0));
-            auto outputPort = std::make_unique<PySysLinkBase::OutputPort>(PySysLinkBase::OutputPort(std::move(signalValue)));
+            auto outputPort = std::make_unique<PySysLinkBase::OutputPort>(PySysLinkBase::OutputPort(std::move(signalValue), *this));
             this->outputPorts.push_back(std::move(outputPort));
         }
 
@@ -42,17 +42,17 @@ namespace BlockTypeSupports::BasicCppSupport
         return this->sampleTimes;
     }
 
-    std::vector<std::unique_ptr<PySysLinkBase::InputPort>>& SimulationBlockCpp::GetInputPorts()
+    std::vector<std::shared_ptr<PySysLinkBase::InputPort>> SimulationBlockCpp::GetInputPorts() const
     {
         return this->inputPorts;
     }
             
-    const std::vector<std::unique_ptr<PySysLinkBase::OutputPort>>& SimulationBlockCpp::GetOutputPorts() const
+    const std::vector<std::shared_ptr<PySysLinkBase::OutputPort>> SimulationBlockCpp::GetOutputPorts() const
     {
         return this->outputPorts;
     }
 
-    const std::vector<std::unique_ptr<PySysLinkBase::OutputPort>>& SimulationBlockCpp::ComputeOutputsOfBlock(PySysLinkBase::SampleTime sampleTime)
+    const std::vector<std::shared_ptr<PySysLinkBase::OutputPort>> SimulationBlockCpp::ComputeOutputsOfBlock(PySysLinkBase::SampleTime sampleTime)
     {
         std::vector<double> inputValues = {};
         for (int i; i < this->simulationBlock->GetInputPortAmmount(); i++)
