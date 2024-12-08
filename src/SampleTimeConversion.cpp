@@ -4,7 +4,7 @@
 
 namespace BlockTypeSupports::BasicCppSupport
 {
-    const PySysLinkBase::SampleTime SampleTimeConversion::CppSampleTimeToPySysLink(BlockTypes::BasicCpp::SampleTime sampleTime)
+    const PySysLinkBase::SampleTime SampleTimeConversion::CppSampleTimeToPySysLink(const BlockTypes::BasicCpp::SampleTime& sampleTime)
     {
         BlockTypes::BasicCpp::SampleTimeType sampleTimeType = sampleTime.GetSampleTimeType();
         if (sampleTimeType == BlockTypes::BasicCpp::SampleTimeType::constant)
@@ -39,7 +39,7 @@ namespace BlockTypeSupports::BasicCppSupport
         }
     }
 
-    const BlockTypes::BasicCpp::SampleTime SampleTimeConversion::PySysLinkTimeToCpp(PySysLinkBase::SampleTime sampleTime)
+    const BlockTypes::BasicCpp::SampleTime SampleTimeConversion::PySysLinkTimeToCpp(const PySysLinkBase::SampleTime& sampleTime)
     {
         PySysLinkBase::SampleTimeType sampleTimeType = sampleTime.GetSampleTimeType();
         if (sampleTimeType == PySysLinkBase::SampleTimeType::constant)
@@ -72,7 +72,7 @@ namespace BlockTypeSupports::BasicCppSupport
         }
     }
 
-    const PySysLinkBase::SampleTimeType SampleTimeConversion::CppSampleTimeTypeToPySysLink(BlockTypes::BasicCpp::SampleTimeType sampleTimeType)
+    const PySysLinkBase::SampleTimeType SampleTimeConversion::CppSampleTimeTypeToPySysLink(const BlockTypes::BasicCpp::SampleTimeType& sampleTimeType)
     {
         if (sampleTimeType == BlockTypes::BasicCpp::SampleTimeType::constant)
         {
@@ -96,7 +96,7 @@ namespace BlockTypeSupports::BasicCppSupport
         }
     }
     
-    const BlockTypes::BasicCpp::SampleTimeType SampleTimeConversion::PySysLinkTimeTypeToCpp(PySysLinkBase::SampleTimeType sampleTimeType)
+    const BlockTypes::BasicCpp::SampleTimeType SampleTimeConversion::PySysLinkTimeTypeToCpp(const PySysLinkBase::SampleTimeType& sampleTimeType)
     {
         if (sampleTimeType == PySysLinkBase::SampleTimeType::constant)
         {

@@ -57,18 +57,30 @@ namespace BlockTypeSupports::BasicCppSupport
         return this->outputPorts;
     }
 
-    const std::vector<std::shared_ptr<PySysLinkBase::OutputPort>> SimulationBlockCpp::ComputeOutputsOfBlock(PySysLinkBase::SampleTime sampleTime)
+    const std::vector<std::shared_ptr<PySysLinkBase::OutputPort>> SimulationBlockCpp::ComputeOutputsOfBlock(const PySysLinkBase::SampleTime& sampleTime)
     {
         std::vector<double> inputValues = {};
-        for (int i; i < this->simulationBlock->GetInputPortAmmount(); i++)
+        std::cout << "Value ammount expected: " << this->simulationBlock->GetInputPortAmmount() << std::endl;
+        std::cout << "Value ammount available: " << this->GetInputPorts().size() << std::endl;
+        for (int i = 0; i < this->simulationBlock->GetInputPortAmmount(); i++)
         {
             auto inputValue = this->inputPorts[i]->GetValue();
             auto inputValueDouble = inputValue->TryCastToTyped<double>();
             inputValues.push_back(inputValueDouble->GetPayload());
         }
+        std::cout << "Input values acquired: " << inputValues.size() << std::endl;
+        for (const auto& value : inputValues)
+        {
+            std::cout << value << std::endl;
+        }
         std::vector<double> outputValues = this->simulationBlock->CalculateOutputs(inputValues, SampleTimeConversion::PySysLinkTimeToCpp(sampleTime));
-        
-        for (int i; i < this->simulationBlock->GetOutputPortAmmount(); i++)
+        std::cout << "Output values acquired: " << outputValues.size() << std::endl;
+        for (const auto& value : outputValues)
+        {
+            std::cout << value << std::endl;
+        }
+
+        for (int i = 0; i < this->simulationBlock->GetOutputPortAmmount(); i++)
         {
             std::unique_ptr<PySysLinkBase::UnknownTypeSignalValue> outputValue = this->outputPorts[i]->GetValue();
             auto outputValueDouble = outputValue->TryCastToTyped<double>();

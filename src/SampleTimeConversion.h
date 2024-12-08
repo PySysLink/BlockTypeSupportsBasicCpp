@@ -14,10 +14,10 @@ namespace BlockTypeSupports::BasicCppSupport
     */
     {
         public:
-        const static PySysLinkBase::SampleTime CppSampleTimeToPySysLink(BlockTypes::BasicCpp::SampleTime sampleTime);
-        const static BlockTypes::BasicCpp::SampleTime PySysLinkTimeToCpp(PySysLinkBase::SampleTime sampleTime);
-        const static PySysLinkBase::SampleTimeType CppSampleTimeTypeToPySysLink(BlockTypes::BasicCpp::SampleTimeType sampleTimeType);
-        const static BlockTypes::BasicCpp::SampleTimeType PySysLinkTimeTypeToCpp(PySysLinkBase::SampleTimeType sampleTimeType);
+        const static PySysLinkBase::SampleTime CppSampleTimeToPySysLink(const BlockTypes::BasicCpp::SampleTime& sampleTime);
+        const static BlockTypes::BasicCpp::SampleTime PySysLinkTimeToCpp(const PySysLinkBase::SampleTime& sampleTime);
+        const static PySysLinkBase::SampleTimeType CppSampleTimeTypeToPySysLink(const BlockTypes::BasicCpp::SampleTimeType& sampleTimeType);
+        const static BlockTypes::BasicCpp::SampleTimeType PySysLinkTimeTypeToCpp(const PySysLinkBase::SampleTimeType& sampleTimeType);
     };
 } // namespace name
 

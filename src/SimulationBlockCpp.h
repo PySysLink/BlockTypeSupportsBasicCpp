@@ -35,7 +35,7 @@ namespace BlockTypeSupports::BasicCppSupport
             std::vector<std::shared_ptr<PySysLinkBase::InputPort>> GetInputPorts() const;
             const std::vector<std::shared_ptr<PySysLinkBase::OutputPort>> GetOutputPorts() const;
 
-            const std::vector<std::shared_ptr<PySysLinkBase::OutputPort>> ComputeOutputsOfBlock(PySysLinkBase::SampleTime sampleTime);
+            const std::vector<std::shared_ptr<PySysLinkBase::OutputPort>> ComputeOutputsOfBlock(const PySysLinkBase::SampleTime& sampleTime);
     };
 }
 
