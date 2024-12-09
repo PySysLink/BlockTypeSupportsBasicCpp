@@ -20,13 +20,13 @@ namespace BlockTypeSupports::BasicCppSupport
         for (int i = 0; i < this->simulationBlock->GetInputPortAmmount(); i++)
         {
             std::unique_ptr<PySysLinkBase::UnknownTypeSignalValue> signalValue = std::make_unique<PySysLinkBase::SignalValue<double>>(PySysLinkBase::SignalValue<double>(0.0));
-            auto inputPort = std::make_unique<PySysLinkBase::InputPort>(PySysLinkBase::InputPort(inputsHasDirectFeedthrough[i], std::move(signalValue), *this));
+            auto inputPort = std::make_unique<PySysLinkBase::InputPort>(PySysLinkBase::InputPort(inputsHasDirectFeedthrough[i], std::move(signalValue)));
             this->inputPorts.push_back(std::move(inputPort));
         }
         for (int i = 0; i < this->simulationBlock->GetOutputPortAmmount(); i++)
         {
             std::unique_ptr<PySysLinkBase::UnknownTypeSignalValue> signalValue = std::make_unique<PySysLinkBase::SignalValue<double>>(PySysLinkBase::SignalValue<double>(0.0));
-            auto outputPort = std::make_unique<PySysLinkBase::OutputPort>(PySysLinkBase::OutputPort(std::move(signalValue), *this));
+            auto outputPort = std::make_unique<PySysLinkBase::OutputPort>(PySysLinkBase::OutputPort(std::move(signalValue)));
             this->outputPorts.push_back(std::move(outputPort));
         }
 
