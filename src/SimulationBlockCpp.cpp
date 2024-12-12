@@ -32,20 +32,23 @@ namespace BlockTypeSupports::BasicCppSupport
 
         std::cout << "Ports configured..." << std::endl;
 
-        std::vector<BlockTypes::BasicCpp::SampleTime> sampleTimesCpp = this->simulationBlock->GetSampleTimes();
-        this->sampleTimes = {};
-        for (int i = 0; i < sampleTimesCpp.size(); i++)
-        {
-            this->sampleTimes.push_back(SampleTimeConversion::CppSampleTimeToPySysLink(sampleTimesCpp[i]));
-        }
+        std::shared_ptr<BlockTypes::BasicCpp::SampleTime> sampleTimeCpp = this->simulationBlock->GetSampleTime();
+        this->sampleTime = SampleTimeConversion::CppSampleTimeToPySysLink(sampleTimeCpp);
+        
 
         std::cout << "Basic simulation block cpp created" << std::endl;
     }
 
-    std::vector<PySysLinkBase::SampleTime>& SimulationBlockCpp::GetSampleTimes()
+    std::shared_ptr<PySysLinkBase::SampleTime> SimulationBlockCpp::GetSampleTime()
     {
-        return this->sampleTimes;
+        return this->sampleTime;
     }
+    
+    void SimulationBlockCpp::SetSampleTime(std::shared_ptr<PySysLinkBase::SampleTime> sampleTime)
+    {
+        this->sampleTime = sampleTime;
+    }
+
 
     std::vector<std::shared_ptr<PySysLinkBase::InputPort>> SimulationBlockCpp::GetInputPorts() const
     {
@@ -57,7 +60,7 @@ namespace BlockTypeSupports::BasicCppSupport
         return this->outputPorts;
     }
 
-    const std::vector<std::shared_ptr<PySysLinkBase::OutputPort>> SimulationBlockCpp::ComputeOutputsOfBlock(const PySysLinkBase::SampleTime& sampleTime)
+    const std::vector<std::shared_ptr<PySysLinkBase::OutputPort>> SimulationBlockCpp::ComputeOutputsOfBlock(const std::shared_ptr<PySysLinkBase::SampleTime> sampleTime)
     {
         std::vector<double> inputValues = {};
         std::cout << "Value ammount expected: " << this->simulationBlock->GetInputPortAmmount() << std::endl;

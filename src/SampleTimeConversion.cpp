@@ -4,25 +4,25 @@
 
 namespace BlockTypeSupports::BasicCppSupport
 {
-    const PySysLinkBase::SampleTime SampleTimeConversion::CppSampleTimeToPySysLink(const BlockTypes::BasicCpp::SampleTime& sampleTime)
+    const std::shared_ptr<PySysLinkBase::SampleTime> SampleTimeConversion::CppSampleTimeToPySysLink(const std::shared_ptr<BlockTypes::BasicCpp::SampleTime> sampleTime)
     {
-        BlockTypes::BasicCpp::SampleTimeType sampleTimeType = sampleTime.GetSampleTimeType();
+        BlockTypes::BasicCpp::SampleTimeType sampleTimeType = sampleTime->GetSampleTimeType();
         if (sampleTimeType == BlockTypes::BasicCpp::SampleTimeType::constant)
         {
-            return PySysLinkBase::SampleTime(PySysLinkBase::SampleTimeType::constant);
+            return std::make_shared<PySysLinkBase::SampleTime>(PySysLinkBase::SampleTimeType::constant);
         }
         else if (sampleTimeType == BlockTypes::BasicCpp::SampleTimeType::discrete)
         {
-            return PySysLinkBase::SampleTime(PySysLinkBase::SampleTimeType::discrete, sampleTime.GetDiscreteSampleTime());
+            return std::make_shared<PySysLinkBase::SampleTime>(PySysLinkBase::SampleTimeType::discrete, sampleTime->GetDiscreteSampleTime());
         }
         else if (sampleTimeType == BlockTypes::BasicCpp::SampleTimeType::continuous)
         {
-            return PySysLinkBase::SampleTime(PySysLinkBase::SampleTimeType::continuous, sampleTime.GetContinuousSampleTimeGroup());
+            return std::make_shared<PySysLinkBase::SampleTime>(PySysLinkBase::SampleTimeType::continuous, sampleTime->GetContinuousSampleTimeGroup());
         }
         else if (sampleTimeType == BlockTypes::BasicCpp::SampleTimeType::inherited)
         {
             std::vector<PySysLinkBase::SampleTimeType> supportedSampleTimeTypes = {};
-            std::vector<BlockTypes::BasicCpp::SampleTimeType> supportedSampleTimeTypesCpp = sampleTime.GetSupportedSampleTimeTypesForInheritance();
+            std::vector<BlockTypes::BasicCpp::SampleTimeType> supportedSampleTimeTypesCpp = sampleTime->GetSupportedSampleTimeTypesForInheritance();
             std::cout << "Sample time account: " << supportedSampleTimeTypesCpp.size() << std::endl;
 
             for (int i = 0; i < supportedSampleTimeTypesCpp.size(); i++)
@@ -31,7 +31,7 @@ namespace BlockTypeSupports::BasicCppSupport
                 supportedSampleTimeTypes.push_back(SampleTimeConversion::CppSampleTimeTypeToPySysLink(supportedSampleTimeTypesCpp[i]));
             }
             std::cout << "Kaixo hemen nago py" << std::endl;
-            return PySysLinkBase::SampleTime(PySysLinkBase::SampleTimeType::inherited, supportedSampleTimeTypes);
+            return std::make_shared<PySysLinkBase::SampleTime>(PySysLinkBase::SampleTimeType::inherited, supportedSampleTimeTypes);
         }
         else 
         {
@@ -39,32 +39,32 @@ namespace BlockTypeSupports::BasicCppSupport
         }
     }
 
-    const BlockTypes::BasicCpp::SampleTime SampleTimeConversion::PySysLinkTimeToCpp(const PySysLinkBase::SampleTime& sampleTime)
+    const std::shared_ptr<BlockTypes::BasicCpp::SampleTime> SampleTimeConversion::PySysLinkTimeToCpp(const std::shared_ptr<PySysLinkBase::SampleTime> sampleTime)
     {
-        PySysLinkBase::SampleTimeType sampleTimeType = sampleTime.GetSampleTimeType();
+        PySysLinkBase::SampleTimeType sampleTimeType = sampleTime->GetSampleTimeType();
         if (sampleTimeType == PySysLinkBase::SampleTimeType::constant)
         {
-            return BlockTypes::BasicCpp::SampleTime(BlockTypes::BasicCpp::SampleTimeType::constant);
+            return std::make_shared<BlockTypes::BasicCpp::SampleTime>(BlockTypes::BasicCpp::SampleTimeType::constant);
         }
         else if (sampleTimeType == PySysLinkBase::SampleTimeType::discrete)
         {
-            return BlockTypes::BasicCpp::SampleTime(BlockTypes::BasicCpp::SampleTimeType::discrete, sampleTime.GetDiscreteSampleTime());
+            return std::make_shared<BlockTypes::BasicCpp::SampleTime>(BlockTypes::BasicCpp::SampleTimeType::discrete, sampleTime->GetDiscreteSampleTime());
         }
         else if (sampleTimeType == PySysLinkBase::SampleTimeType::continuous)
         {
-            return BlockTypes::BasicCpp::SampleTime(BlockTypes::BasicCpp::SampleTimeType::continuous, sampleTime.GetContinuousSampleTimeGroup());
+            return std::make_shared<BlockTypes::BasicCpp::SampleTime>(BlockTypes::BasicCpp::SampleTimeType::continuous, sampleTime->GetContinuousSampleTimeGroup());
         }
         else if (sampleTimeType == PySysLinkBase::SampleTimeType::inherited)
         {
             std::vector<BlockTypes::BasicCpp::SampleTimeType> supportedSampleTimeTypes = {};
             std::cout << "Kaixo hemen nago" << std::endl;
-            std::vector<PySysLinkBase::SampleTimeType> supportedSampleTimeTypesPySysLink = sampleTime.GetSupportedSampleTimeTypesForInheritance();
+            std::vector<PySysLinkBase::SampleTimeType> supportedSampleTimeTypesPySysLink = sampleTime->GetSupportedSampleTimeTypesForInheritance();
             std::cout << "Akatxik ez!" << std::endl;
             for (int i = 0; i < supportedSampleTimeTypesPySysLink.size(); i++)
             {
                 supportedSampleTimeTypes.push_back(SampleTimeConversion::PySysLinkTimeTypeToCpp(supportedSampleTimeTypesPySysLink[i]));
             }
-            return BlockTypes::BasicCpp::SampleTime(BlockTypes::BasicCpp::SampleTimeType::inherited, supportedSampleTimeTypes);
+            return std::make_shared<BlockTypes::BasicCpp::SampleTime>(BlockTypes::BasicCpp::SampleTimeType::inherited, supportedSampleTimeTypes);
         }
         else 
         {

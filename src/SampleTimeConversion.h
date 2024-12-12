@@ -3,6 +3,7 @@
 
 #include <PySysLinkBase/SampleTime.h>
 #include <BlockTypes/BasicCpp/SampleTime.h>
+#include <memory>
 
 namespace BlockTypeSupports::BasicCppSupport
 {
@@ -14,8 +15,8 @@ namespace BlockTypeSupports::BasicCppSupport
     */
     {
         public:
-        const static PySysLinkBase::SampleTime CppSampleTimeToPySysLink(const BlockTypes::BasicCpp::SampleTime& sampleTime);
-        const static BlockTypes::BasicCpp::SampleTime PySysLinkTimeToCpp(const PySysLinkBase::SampleTime& sampleTime);
+        const static std::shared_ptr<PySysLinkBase::SampleTime> CppSampleTimeToPySysLink(const std::shared_ptr<BlockTypes::BasicCpp::SampleTime> sampleTime);
+        const static std::shared_ptr<BlockTypes::BasicCpp::SampleTime> PySysLinkTimeToCpp(const std::shared_ptr<PySysLinkBase::SampleTime> sampleTime);
         const static PySysLinkBase::SampleTimeType CppSampleTimeTypeToPySysLink(const BlockTypes::BasicCpp::SampleTimeType& sampleTimeType);
         const static BlockTypes::BasicCpp::SampleTimeType PySysLinkTimeTypeToCpp(const PySysLinkBase::SampleTimeType& sampleTimeType);
     };
