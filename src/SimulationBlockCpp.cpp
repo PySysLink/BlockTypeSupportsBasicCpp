@@ -2,16 +2,15 @@
 #include <PySysLinkBase/PortsAndSignalValues/SignalValue.h>
 #include <stdexcept>
 #include "SampleTimeConversion.h"
-#include <iostream>
+#include "spdlog/spdlog.h"
 
 namespace BlockTypeSupports::BasicCppSupport
 {
     SimulationBlockCpp::SimulationBlockCpp(std::unique_ptr<BlockTypes::BasicCpp::SimulationBlock> simulationBlock, std::map<std::string, PySysLinkBase::ConfigurationValue> blockConfiguration) : ISimulationBlock(blockConfiguration)
     {
-        std::cout << "Creating basic simulation block cpp..." << std::endl;
+        spdlog::get("default_pysyslink")->debug("Creating basic simulation block cpp...");
         this->simulationBlock = std::move(simulationBlock);
 
-        std::cout << "Simulation block moved..." << std::endl;
 
         std::vector<bool> inputsHasDirectFeedthrough = this->simulationBlock->InputsHasDirectFeedthrough();
         if (inputsHasDirectFeedthrough.size() != this->simulationBlock->GetInputPortAmmount()) {
@@ -30,13 +29,13 @@ namespace BlockTypeSupports::BasicCppSupport
             this->outputPorts.push_back(std::move(outputPort));
         }
 
-        std::cout << "Ports configured..." << std::endl;
+        spdlog::get("default_pysyslink")->debug("Ports configured...");
 
         std::shared_ptr<BlockTypes::BasicCpp::SampleTime> sampleTimeCpp = this->simulationBlock->GetSampleTime();
         this->sampleTime = SampleTimeConversion::CppSampleTimeToPySysLink(sampleTimeCpp);
         
 
-        std::cout << "Basic simulation block cpp created" << std::endl;
+        spdlog::get("default_pysyslink")->debug("Basic simulation block cpp created");
     }
 
     std::shared_ptr<PySysLinkBase::SampleTime> SimulationBlockCpp::GetSampleTime()
@@ -63,24 +62,24 @@ namespace BlockTypeSupports::BasicCppSupport
     const std::vector<std::shared_ptr<PySysLinkBase::OutputPort>> SimulationBlockCpp::ComputeOutputsOfBlock(const std::shared_ptr<PySysLinkBase::SampleTime> sampleTime)
     {
         std::vector<double> inputValues = {};
-        std::cout << "Value ammount expected: " << this->simulationBlock->GetInputPortAmmount() << std::endl;
-        std::cout << "Value ammount available: " << this->GetInputPorts().size() << std::endl;
+        spdlog::get("default_pysyslink")->debug("Value ammount expected: {}", this->simulationBlock->GetInputPortAmmount());
+        spdlog::get("default_pysyslink")->debug("Value ammount available: {}", this->GetInputPorts().size());
         for (int i = 0; i < this->simulationBlock->GetInputPortAmmount(); i++)
         {
             auto inputValue = this->inputPorts[i]->GetValue();
             auto inputValueDouble = inputValue->TryCastToTyped<double>();
             inputValues.push_back(inputValueDouble->GetPayload());
         }
-        std::cout << "Input values acquired: " << inputValues.size() << std::endl;
+        spdlog::get("default_pysyslink")->debug("Input values acquired: {}", inputValues.size());
         for (const auto& value : inputValues)
         {
-            std::cout << value << std::endl;
+            spdlog::get("default_pysyslink")->debug(value);
         }
         std::vector<double> outputValues = this->simulationBlock->CalculateOutputs(inputValues, SampleTimeConversion::PySysLinkTimeToCpp(sampleTime));
-        std::cout << "Output values acquired: " << outputValues.size() << std::endl;
+        spdlog::get("default_pysyslink")->debug("Output values acquired: ", outputValues.size());
         for (const auto& value : outputValues)
         {
-            std::cout << value << std::endl;
+            spdlog::get("default_pysyslink")->debug(value);
         }
 
         for (int i = 0; i < this->simulationBlock->GetOutputPortAmmount(); i++)

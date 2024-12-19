@@ -1,6 +1,6 @@
 #include "SampleTimeConversion.h"
 #include <stdexcept>
-#include <iostream>
+#include "spdlog/spdlog.h"
 
 namespace BlockTypeSupports::BasicCppSupport
 {
@@ -23,14 +23,13 @@ namespace BlockTypeSupports::BasicCppSupport
         {
             std::vector<PySysLinkBase::SampleTimeType> supportedSampleTimeTypes = {};
             std::vector<BlockTypes::BasicCpp::SampleTimeType> supportedSampleTimeTypesCpp = sampleTime->GetSupportedSampleTimeTypesForInheritance();
-            std::cout << "Sample time account: " << supportedSampleTimeTypesCpp.size() << std::endl;
+            spdlog::get("default_pysyslink")->debug("Sample time account: {}", supportedSampleTimeTypesCpp.size());
 
             for (int i = 0; i < supportedSampleTimeTypesCpp.size(); i++)
             {
-                std::cout << "new sample time inher acquired" << std::endl;
+                spdlog::get("default_pysyslink")->debug("new sample time inher acquired");
                 supportedSampleTimeTypes.push_back(SampleTimeConversion::CppSampleTimeTypeToPySysLink(supportedSampleTimeTypesCpp[i]));
             }
-            std::cout << "Kaixo hemen nago py" << std::endl;
             return std::make_shared<PySysLinkBase::SampleTime>(PySysLinkBase::SampleTimeType::inherited, supportedSampleTimeTypes);
         }
         else 
@@ -57,9 +56,7 @@ namespace BlockTypeSupports::BasicCppSupport
         else if (sampleTimeType == PySysLinkBase::SampleTimeType::inherited)
         {
             std::vector<BlockTypes::BasicCpp::SampleTimeType> supportedSampleTimeTypes = {};
-            std::cout << "Kaixo hemen nago" << std::endl;
             std::vector<PySysLinkBase::SampleTimeType> supportedSampleTimeTypesPySysLink = sampleTime->GetSupportedSampleTimeTypesForInheritance();
-            std::cout << "Akatxik ez!" << std::endl;
             for (int i = 0; i < supportedSampleTimeTypesPySysLink.size(); i++)
             {
                 supportedSampleTimeTypes.push_back(SampleTimeConversion::PySysLinkTimeTypeToCpp(supportedSampleTimeTypesPySysLink[i]));

@@ -4,7 +4,7 @@
 // #include <BlockLibraries/BasicBlocks/Sumator.h>
 // #include <BlockLibraries/BasicBlocks/Display.h>
 #include "SimulationBlockCpp.h"
-#include <iostream>
+#include "spdlog/spdlog.h"
 #include "BlockLibrariesPlugingLoader.h"
 #include <algorithm>
 
@@ -25,7 +25,7 @@ namespace BlockTypeSupports::BasicCppSupport
     {
         std::string blockClass = PySysLinkBase::ConfigurationValueManager::TryGetConfigurationValue<std::string>("BlockClass", blockConfiguration);
 
-        std::cout << blockClass << " type block to create..." << std::endl;
+        spdlog::get("default_pysyslink")->debug("{} type block to create...", blockClass);
         
 
         for (auto const& [key, val] : this->factoryRegistry)

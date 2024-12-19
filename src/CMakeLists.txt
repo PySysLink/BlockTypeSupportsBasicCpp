@@ -6,6 +6,24 @@ add_library(BlockTypeSupportsBasicCppSupport SHARED RegisterBlockFactories.cpp
             BlockLibrariesPlugingLoader.cpp
             RegisterBlockFactories.cpp)
 
+include(FetchContent)
+
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
+
+FetchContent_Declare(
+        spdlog
+        GIT_REPOSITORY https://github.com/gabime/spdlog.git
+        GIT_TAG        v1.15.0
+)
+
+FetchContent_MakeAvailable(spdlog)
+
+add_dependencies(BlockTypeSupportsBasicCppSupport spdlog::spdlog)
+target_link_libraries(BlockTypeSupportsBasicCppSupport PRIVATE spdlog::spdlog)
+
+
+
 target_link_libraries(BlockTypeSupportsBasicCppSupport PRIVATE PySysLinkBase)
 target_link_libraries(BlockTypeSupportsBasicCppSupport PRIVATE BlockTypesBasicCpp)
 # target_link_libraries(BasicCppSupport PRIVATE BasicBlocks)

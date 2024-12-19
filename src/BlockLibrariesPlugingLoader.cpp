@@ -1,6 +1,6 @@
 #include "BlockLibrariesPlugingLoader.h"
 #include <filesystem>
-#include <iostream>
+#include "spdlog/spdlog.h"
 
 namespace BlockTypeSupports::BasicCppSupport
 {
@@ -10,20 +10,20 @@ namespace BlockTypeSupports::BasicCppSupport
         for (const auto& pluginPath : this->FindSharedLibraries(pluginDirectory)) {
             void* handle = dlopen(pluginPath.c_str(), RTLD_LAZY);
             if (!handle) {
-                std::cerr << "Failed to load block library plugin: " << pluginPath << std::endl;
-                std::cerr << dlerror() << std::endl;
+                spdlog::get("default_pysyslink")->error("Failed to load block library plugin: {}", pluginPath);
+                spdlog::get("default_pysyslink")->error(dlerror());
                 continue;
             }
 
             auto registerFunc = reinterpret_cast<void(*)(std::map<std::string, std::unique_ptr<BlockTypes::BasicCpp::IBasicCppBlockFactory>>&)>(dlsym(handle, "RegisterBasicCppFactories"));
 
             if (!registerFunc) {
-                std::cerr << "Failed to find entry point in: " << pluginPath << std::endl;
-                std::cerr << dlerror() << std::endl;
+                spdlog::get("default_pysyslink")->error("Failed to find entry point in: {}", pluginPath);
+                spdlog::get("default_pysyslink")->error(dlerror());
                 dlclose(handle);
                 continue;
             }
-            std::cout << "Block library pluging loaded: " << pluginPath << std::endl;
+            spdlog::get("default_pysyslink")->debug("Block library pluging loaded: {}", pluginPath);
             registerFunc(factoryRegistry);
         }
         return factoryRegistry;
@@ -46,7 +46,7 @@ namespace BlockTypeSupports::BasicCppSupport
                 }
             }
         } catch (const std::filesystem::filesystem_error& e) {
-            std::cerr << "Error accessing directory: " << e.what() << "\n";
+            spdlog::get("default_pysyslink")->error("Error accessing directory: ", e.what());
         }
 
         return sharedLibraries;
