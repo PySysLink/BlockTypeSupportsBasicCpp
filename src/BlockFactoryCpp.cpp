@@ -7,6 +7,7 @@
 #include "spdlog/spdlog.h"
 #include "BlockLibrariesPlugingLoader.h"
 #include <algorithm>
+#include "CppEventHandler.h"
 
 namespace BlockTypeSupports::BasicCppSupport
 {
@@ -21,7 +22,7 @@ namespace BlockTypeSupports::BasicCppSupport
 
     // }
 
-    std::unique_ptr<PySysLinkBase::ISimulationBlock> BlockFactoryCpp::CreateBlock(std::map<std::string, PySysLinkBase::ConfigurationValue> blockConfiguration)
+    std::unique_ptr<PySysLinkBase::ISimulationBlock> BlockFactoryCpp::CreateBlock(std::map<std::string, PySysLinkBase::ConfigurationValue> blockConfiguration, std::shared_ptr<PySysLinkBase::IBlockEventsHandler> blockEventsHandler)
     {
         std::string blockClass = PySysLinkBase::ConfigurationValueManager::TryGetConfigurationValue<std::string>("BlockClass", blockConfiguration);
 
@@ -35,8 +36,9 @@ namespace BlockTypeSupports::BasicCppSupport
             int cnt = std::count(supportedBlockClasses.begin(), supportedBlockClasses.end(), blockClass);
             if (cnt > 0)
             {
-                std::unique_ptr<BlockTypes::BasicCpp::SimulationBlock> simulationBlock = val->CreateBlock(blockClass, blockConfiguration);
-                return std::make_unique<SimulationBlockCpp>(std::move(simulationBlock), blockConfiguration);
+                std::shared_ptr<CppEventHandler> cppEventHandler = std::make_shared<CppEventHandler>(blockEventsHandler);
+                std::unique_ptr<BlockTypes::BasicCpp::SimulationBlock> simulationBlock = val->CreateBlock(blockClass, blockConfiguration, cppEventHandler);
+                return std::make_unique<SimulationBlockCpp>(std::move(simulationBlock), blockConfiguration, blockEventsHandler);
             }
         }
 

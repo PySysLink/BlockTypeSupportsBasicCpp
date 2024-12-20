@@ -6,7 +6,7 @@
 
 namespace BlockTypeSupports::BasicCppSupport
 {
-    SimulationBlockCpp::SimulationBlockCpp(std::unique_ptr<BlockTypes::BasicCpp::SimulationBlock> simulationBlock, std::map<std::string, PySysLinkBase::ConfigurationValue> blockConfiguration) : ISimulationBlock(blockConfiguration)
+    SimulationBlockCpp::SimulationBlockCpp(std::unique_ptr<BlockTypes::BasicCpp::SimulationBlock> simulationBlock, std::map<std::string, PySysLinkBase::ConfigurationValue> blockConfiguration, std::shared_ptr<PySysLinkBase::IBlockEventsHandler> blockEventsHandler) : ISimulationBlock(blockConfiguration, blockEventsHandler)
     {
         spdlog::get("default_pysyslink")->debug("Creating basic simulation block cpp...");
         this->simulationBlock = std::move(simulationBlock);

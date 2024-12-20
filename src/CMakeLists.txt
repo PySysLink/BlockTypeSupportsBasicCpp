@@ -4,7 +4,8 @@ add_library(BlockTypeSupportsBasicCppSupport SHARED RegisterBlockFactories.cpp
             SimulationBlockCpp.cpp
             BlockFactoryCpp.cpp
             BlockLibrariesPlugingLoader.cpp
-            RegisterBlockFactories.cpp)
+            RegisterBlockFactories.cpp
+            CppEventHandler.cpp)
 
 include(FetchContent)
 

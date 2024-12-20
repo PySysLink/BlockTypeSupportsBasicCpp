@@ -9,6 +9,7 @@
 #include <PySysLinkBase/SampleTime.h>
 #include <PySysLinkBase/ContinuousState.h>
 #include <PySysLinkBase/ISimulationBlock.h>
+#include <PySysLinkBase/IBlockEventsHandler.h>
 #include <BlockTypes/BasicCpp/SimulationBlock.h>
 #include <BlockTypes/BasicCpp/SampleTime.h>
 
@@ -29,7 +30,7 @@ namespace BlockTypeSupports::BasicCppSupport
             const std::string GetId() const;
             const std::string GetName() const;
 
-            SimulationBlockCpp(std::unique_ptr<BlockTypes::BasicCpp::SimulationBlock> simulationBlock, std::map<std::string, PySysLinkBase::ConfigurationValue> blockConfiguration);
+            SimulationBlockCpp(std::unique_ptr<BlockTypes::BasicCpp::SimulationBlock> simulationBlock, std::map<std::string, PySysLinkBase::ConfigurationValue> blockConfiguration, std::shared_ptr<PySysLinkBase::IBlockEventsHandler> blockEventsHandler);
             std::shared_ptr<PySysLinkBase::SampleTime> GetSampleTime();
             void SetSampleTime(std::shared_ptr<PySysLinkBase::SampleTime> sampleTime);
 

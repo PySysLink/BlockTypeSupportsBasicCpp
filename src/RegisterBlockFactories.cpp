@@ -7,6 +7,5 @@ extern "C" void RegisterBlockFactories(std::map<std::string, std::unique_ptr<PyS
 }
 
 extern "C" void RegisterSpdlogLogger(std::shared_ptr<spdlog::logger> logger) {
-    // spdlog::register_logger(logger);
     spdlog::get("default_pysyslink")->debug("Logger from pluging BlockTypeSupportsBasicCpp!");
 }
