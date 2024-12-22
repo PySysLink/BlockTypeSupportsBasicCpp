@@ -76,7 +76,7 @@ namespace BlockTypeSupports::BasicCppSupport
             spdlog::get("default_pysyslink")->debug(value);
         }
         std::vector<double> outputValues = this->simulationBlock->CalculateOutputs(inputValues, SampleTimeConversion::PySysLinkTimeToCpp(sampleTime));
-        spdlog::get("default_pysyslink")->debug("Output values acquired: ", outputValues.size());
+        spdlog::get("default_pysyslink")->debug("Output values acquired: {}", outputValues.size());
         for (const auto& value : outputValues)
         {
             spdlog::get("default_pysyslink")->debug(value);
@@ -92,4 +92,10 @@ namespace BlockTypeSupports::BasicCppSupport
         
         return this->GetOutputPorts();
     }
+
+    bool SimulationBlockCpp::TryUpdateConfigurationValue(std::string keyName, PySysLinkBase::ConfigurationValue value)
+    {
+        return this->simulationBlock->TryUpdateConfigurationValue(keyName, value);
+    }
+
 }

@@ -38,6 +38,8 @@ namespace BlockTypeSupports::BasicCppSupport
             const std::vector<std::shared_ptr<PySysLinkBase::OutputPort>> GetOutputPorts() const;
 
             const std::vector<std::shared_ptr<PySysLinkBase::OutputPort>> ComputeOutputsOfBlock(const std::shared_ptr<PySysLinkBase::SampleTime> sampleTime);
+
+            bool TryUpdateConfigurationValue(std::string keyName, PySysLinkBase::ConfigurationValue value);
     };
 }
 
