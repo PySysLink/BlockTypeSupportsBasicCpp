@@ -59,7 +59,7 @@ namespace BlockTypeSupports::BasicCppSupport
         return this->outputPorts;
     }
 
-    const std::vector<std::shared_ptr<PySysLinkBase::OutputPort>> SimulationBlockCpp::ComputeOutputsOfBlock(const std::shared_ptr<PySysLinkBase::SampleTime> sampleTime)
+    const std::vector<std::shared_ptr<PySysLinkBase::OutputPort>> SimulationBlockCpp::ComputeOutputsOfBlock(const std::shared_ptr<PySysLinkBase::SampleTime> sampleTime, double currentTime)
     {
         std::vector<double> inputValues = {};
         spdlog::get("default_pysyslink")->debug("Value ammount expected: {}", this->simulationBlock->GetInputPortAmmount());
@@ -75,7 +75,7 @@ namespace BlockTypeSupports::BasicCppSupport
         {
             spdlog::get("default_pysyslink")->debug(value);
         }
-        std::vector<double> outputValues = this->simulationBlock->CalculateOutputs(inputValues, SampleTimeConversion::PySysLinkTimeToCpp(sampleTime));
+        std::vector<double> outputValues = this->simulationBlock->CalculateOutputs(inputValues, SampleTimeConversion::PySysLinkTimeToCpp(sampleTime), currentTime);
         spdlog::get("default_pysyslink")->debug("Output values acquired: {}", outputValues.size());
         for (const auto& value : outputValues)
         {
