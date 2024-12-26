@@ -1,9 +1,7 @@
 # Define the shared library
 add_library(BlockTypeSupportsBasicCppSupport SHARED RegisterBlockFactories.cpp
             SampleTimeConversion.cpp
-            SimulationBlockCpp.cpp
             BlockFactoryCpp.cpp
-            BlockLibrariesPlugingLoader.cpp
             RegisterBlockFactories.cpp
             CppEventHandler.cpp)
 

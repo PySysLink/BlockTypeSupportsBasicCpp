@@ -1,8 +1,5 @@
 #include "BlockFactoryCpp.h"
 #include <stdexcept>
-// #include <BlockLibraries/BasicBlocks/Constant.h>
-// #include <BlockLibraries/BasicBlocks/Sumator.h>
-// #include <BlockLibraries/BasicBlocks/Display.h>
 #include "SimulationBlockCpp.h"
 #include "spdlog/spdlog.h"
 #include "BlockLibrariesPlugingLoader.h"
@@ -13,8 +10,11 @@ namespace BlockTypeSupports::BasicCppSupport
 {
     BlockFactoryCpp::BlockFactoryCpp()
     {
-        std::unique_ptr<BlockLibrariesPlugingLoader> blockLibrariesPlugingLoader = std::make_unique<BlockLibrariesPlugingLoader>();
-        this->factoryRegistry = blockLibrariesPlugingLoader->LoadPlugins("/usr/local/lib");
+        std::unique_ptr<BlockLibrariesPlugingLoader<double>> blockLibrariesPlugingLoaderDouble = std::make_unique<BlockLibrariesPlugingLoader<double>>();
+        this->factoryRegistryDouble = blockLibrariesPlugingLoaderDouble->LoadPlugins("/usr/local/lib");
+
+        std::unique_ptr<BlockLibrariesPlugingLoader<std::complex<double>>> blockLibrariesPlugingLoaderComplex = std::make_unique<BlockLibrariesPlugingLoader<std::complex<double>>>();
+        this->factoryRegistryComplex = blockLibrariesPlugingLoaderComplex->LoadPlugins("/usr/local/lib");
     }
 
     // BlockFactoryCpp::~BlockFactoryCpp()
@@ -25,25 +25,27 @@ namespace BlockTypeSupports::BasicCppSupport
     std::unique_ptr<PySysLinkBase::ISimulationBlock> BlockFactoryCpp::CreateBlock(std::map<std::string, PySysLinkBase::ConfigurationValue> blockConfiguration, std::shared_ptr<PySysLinkBase::IBlockEventsHandler> blockEventsHandler)
     {
         std::string blockClass = PySysLinkBase::ConfigurationValueManager::TryGetConfigurationValue<std::string>("BlockClass", blockConfiguration);
-
-        spdlog::get("default_pysyslink")->debug("{} type block to create...", blockClass);
         
-
-        for (auto const& [key, val] : this->factoryRegistry)
+        std::string signalType = "Double";
+        try
         {
-            std::vector<std::string> supportedBlockClasses = val->GetSupportedBlockClasses();
-            
-            int cnt = std::count(supportedBlockClasses.begin(), supportedBlockClasses.end(), blockClass);
-            if (cnt > 0)
-            {
-                std::shared_ptr<CppEventHandler> cppEventHandler = std::make_shared<CppEventHandler>(blockEventsHandler);
-                std::unique_ptr<BlockTypes::BasicCpp::SimulationBlock> simulationBlock = val->CreateBlock(blockClass, blockConfiguration, cppEventHandler);
-                return std::make_unique<SimulationBlockCpp>(std::move(simulationBlock), blockConfiguration, blockEventsHandler);
-            }
+            signalType = PySysLinkBase::ConfigurationValueManager::TryGetConfigurationValue<std::string>("SignalType", blockConfiguration);
+        } catch(std::out_of_range) {}
+
+        spdlog::get("default_pysyslink")->debug("{} type block to create with signal type {}...", blockClass, signalType);
+        
+        if (signalType == "Double")
+        {
+            return std::move(this->CreateBlockFromRegistry<double>(this->factoryRegistryDouble, blockClass, blockConfiguration, blockEventsHandler));
         }
-
-        throw std::out_of_range("Block type with id: " + blockClass + " not found in module BasicCpp.");
-
+        else if (signalType == "Complex")
+        {
+            return std::move(this->CreateBlockFromRegistry<std::complex<double>>(this->factoryRegistryComplex, blockClass, blockConfiguration, blockEventsHandler));
+        }
+        else
+        {
+            throw std::invalid_argument("SignalType: " + signalType + " is not supported for block type BasicCpp");
+        }
     }
 
 } // namespace BlockTypeSupports::BasicCppSupport

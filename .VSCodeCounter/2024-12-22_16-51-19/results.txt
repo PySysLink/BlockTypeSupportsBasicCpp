@@ -1,0 +1,48 @@
+Date : 2024-12-22 16:51:19
+Directory : /home/pello/BlockTypeSupports/BlockTypeSupportsBasicCpp
+Total : 17 files,  906 codes, 0 comments, 187 blanks, all 1093 lines
+
+Languages
++----------+------------+------------+------------+------------+------------+
+| language | files      | code       | comment    | blank      | total      |
++----------+------------+------------+------------+------------+------------+
+| cpp      |         14 |        783 |          0 |        146 |        929 |
+| CMake    |          3 |        123 |          0 |         41 |        164 |
++----------+------------+------------+------------+------------+------------+
+
+Directories
++-------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                  | files      | code       | comment    | blank      | total      |
++-------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                     |         17 |        906 |          0 |        187 |      1,093 |
+| . (Files)                                                                                             |          1 |         65 |          0 |         24 |         89 |
+| build                                                                                                 |          2 |        368 |          0 |         57 |        425 |
+| build/_deps                                                                                           |          2 |        368 |          0 |         57 |        425 |
+| build/_deps/spdlog-src                                                                                |          2 |        368 |          0 |         57 |        425 |
+| build/_deps/spdlog-src/example                                                                        |          2 |        368 |          0 |         57 |        425 |
+| src                                                                                                   |         14 |        473 |          0 |        106 |        579 |
++-------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-------------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| filename                                                                                              | language | code       | comment    | blank      | total      |
++-------------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| /home/pello/BlockTypeSupports/BlockTypeSupportsBasicCpp/CMakeLists.txt                                | CMake    |         65 |          0 |         24 |         89 |
+| /home/pello/BlockTypeSupports/BlockTypeSupportsBasicCpp/build/_deps/spdlog-src/example/CMakeLists.txt | CMake    |         19 |          0 |          5 |         24 |
+| /home/pello/BlockTypeSupports/BlockTypeSupportsBasicCpp/build/_deps/spdlog-src/example/example.cpp    | cpp      |        349 |          0 |         52 |        401 |
+| /home/pello/BlockTypeSupports/BlockTypeSupportsBasicCpp/src/BlockFactoryCpp.cpp                       | cpp      |         38 |          0 |         12 |         50 |
+| /home/pello/BlockTypeSupports/BlockTypeSupportsBasicCpp/src/BlockFactoryCpp.h                         | cpp      |         17 |          0 |          5 |         22 |
+| /home/pello/BlockTypeSupports/BlockTypeSupportsBasicCpp/src/BlockLibrariesPlugingLoader.cpp           | cpp      |         50 |          0 |         10 |         60 |
+| /home/pello/BlockTypeSupports/BlockTypeSupportsBasicCpp/src/BlockLibrariesPlugingLoader.h             | cpp      |         17 |          0 |          8 |         25 |
+| /home/pello/BlockTypeSupports/BlockTypeSupportsBasicCpp/src/BlockWithContinuousStates.h               | cpp      |         16 |          0 |          5 |         21 |
+| /home/pello/BlockTypeSupports/BlockTypeSupportsBasicCpp/src/BlockWithoutContinuousStates.cpp          | cpp      |         13 |          0 |          4 |         17 |
+| /home/pello/BlockTypeSupports/BlockTypeSupportsBasicCpp/src/CMakeLists.txt                            | CMake    |         39 |          0 |         12 |         51 |
+| /home/pello/BlockTypeSupports/BlockTypeSupportsBasicCpp/src/CppEventHandler.cpp                       | cpp      |         13 |          0 |          2 |         15 |
+| /home/pello/BlockTypeSupports/BlockTypeSupportsBasicCpp/src/CppEventHandler.h                         | cpp      |         17 |          0 |          6 |         23 |
+| /home/pello/BlockTypeSupports/BlockTypeSupportsBasicCpp/src/RegisterBlockFactories.cpp                | cpp      |          9 |          0 |          3 |         12 |
+| /home/pello/BlockTypeSupports/BlockTypeSupportsBasicCpp/src/SampleTimeConversion.cpp                  | cpp      |        114 |          0 |          6 |        120 |
+| /home/pello/BlockTypeSupports/BlockTypeSupportsBasicCpp/src/SampleTimeConversion.h                    | cpp      |         22 |          0 |          5 |         27 |
+| /home/pello/BlockTypeSupports/BlockTypeSupportsBasicCpp/src/SimulationBlockCpp.cpp                    | cpp      |         71 |          0 |         18 |         89 |
+| /home/pello/BlockTypeSupports/BlockTypeSupportsBasicCpp/src/SimulationBlockCpp.h                      | cpp      |         37 |          0 |         10 |         47 |
+| Total                                                                                                 |          |        906 |          0 |        187 |      1,093 |
++-------------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
