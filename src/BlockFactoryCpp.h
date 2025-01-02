@@ -4,7 +4,9 @@
 #include <PySysLinkBase/IBlockFactory.h>
 #include <PySysLinkBase/IBlockEventsHandler.h>
 #include <BlockTypes/BasicCpp/IBasicCppBlockFactory.h>
+#include <BlockTypes/BasicCpp/SimulationBlockWithContinuousStates.h>
 #include "SimulationBlockCpp.h"
+#include "SimulationBlockCppWithContinuousStates.h"
 #include "CppEventHandler.h"
 #include <stdexcept>
 
@@ -28,8 +30,17 @@ namespace BlockTypeSupports::BasicCppSupport
                     if (cnt > 0)
                     {
                         std::shared_ptr<CppEventHandler> cppEventHandler = std::make_shared<CppEventHandler>(blockEventsHandler);
-                        std::unique_ptr<BlockTypes::BasicCpp::SimulationBlock<T>> simulationBlock = val->CreateBlock(blockClass, blockConfiguration, cppEventHandler);
-                        return std::make_unique<SimulationBlockCpp<T>>(std::move(simulationBlock), blockConfiguration, blockEventsHandler);
+                        std::shared_ptr<BlockTypes::BasicCpp::SimulationBlock<T>> simulationBlock = val->CreateBlock(blockClass, blockConfiguration, cppEventHandler);
+
+                        std::shared_ptr<BlockTypes::BasicCpp::SimulationBlockWithContinuousStates<T>> blockWithContinuousStates = std::dynamic_pointer_cast<BlockTypes::BasicCpp::SimulationBlockWithContinuousStates<T>>(simulationBlock);
+                        if (blockWithContinuousStates)
+                        {
+                            return std::make_unique<SimulationBlockCppWithContinuousStates<T>>(std::move(blockWithContinuousStates), blockConfiguration, blockEventsHandler);
+                        }
+                        else
+                        {
+                            return std::make_unique<SimulationBlockCpp<T>>(std::move(simulationBlock), blockConfiguration, blockEventsHandler);
+                        }
                     }
                 }
 

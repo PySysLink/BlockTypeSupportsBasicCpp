@@ -1,5 +1,5 @@
-#ifndef SRC_BLOCK_TYPE_SUPPORTS_BASIC_CPP_SUPPORT_SIMULATION_BLOCK_CPP
-#define SRC_BLOCK_TYPE_SUPPORTS_BASIC_CPP_SUPPORT_SIMULATION_BLOCK_CPP
+#ifndef SRC_SIMULATION_BLOCK_CPP
+#define SRC_SIMULATION_BLOCK_CPP
 
 #include <string>
 #include <vector>
@@ -21,18 +21,45 @@
 namespace BlockTypeSupports::BasicCppSupport
 {
     template <typename T>
-    class SimulationBlockCpp : public PySysLinkBase::ISimulationBlock {
-        private:
-            std::unique_ptr<BlockTypes::BasicCpp::SimulationBlock<T>> simulationBlock;
+    class SimulationBlockCpp : public virtual PySysLinkBase::ISimulationBlock {
+        protected:
+            std::shared_ptr<BlockTypes::BasicCpp::SimulationBlock<T>> simulationBlock;
             std::shared_ptr<PySysLinkBase::SampleTime> sampleTime;
             std::string id;
             std::string name;
-        protected:
+        
             std::vector<std::shared_ptr<PySysLinkBase::InputPort>> inputPorts;
             std::vector<std::shared_ptr<PySysLinkBase::OutputPort>> outputPorts;
 
+            std::vector<T> GetInputValues() const
+            {
+                std::vector<T> inputValues = {};
+                for (int i = 0; i < this->simulationBlock->GetInputPortAmmount(); i++)
+                {
+                    auto inputValue = this->inputPorts[i]->GetValue();
+                    auto inputValueSignal = inputValue->TryCastToTyped<T>();
+                    inputValues.push_back(inputValueSignal->GetPayload());
+                }
+
+                return inputValues;
+            }
+
+            void SetOutputValues(std::vector<T> outputValues)
+            {
+                for (int i = 0; i < this->simulationBlock->GetOutputPortAmmount(); i++)
+                {
+                    std::unique_ptr<PySysLinkBase::UnknownTypeSignalValue> outputValue = this->outputPorts[i]->GetValue();
+                    auto outputValueSignal = outputValue->TryCastToTyped<T>();
+                    outputValueSignal->SetPayload(outputValues[i]);
+                    this->outputPorts[i]->SetValue(std::make_unique<PySysLinkBase::SignalValue<T>>(*outputValueSignal));
+                }
+            }
+
         public:
-            SimulationBlockCpp(std::unique_ptr<BlockTypes::BasicCpp::SimulationBlock<T>> simulationBlock, std::map<std::string, PySysLinkBase::ConfigurationValue> blockConfiguration, std::shared_ptr<PySysLinkBase::IBlockEventsHandler> blockEventsHandler) : ISimulationBlock(blockConfiguration, blockEventsHandler)
+            SimulationBlockCpp(std::shared_ptr<BlockTypes::BasicCpp::SimulationBlock<T>> simulationBlock, 
+                                std::map<std::string, PySysLinkBase::ConfigurationValue> blockConfiguration, 
+                                std::shared_ptr<PySysLinkBase::IBlockEventsHandler> blockEventsHandler) 
+                                : ISimulationBlock(blockConfiguration, blockEventsHandler) 
             {
                 spdlog::get("default_pysyslink")->debug("Creating basic simulation block cpp...");
                 this->simulationBlock = std::move(simulationBlock);
@@ -64,7 +91,7 @@ namespace BlockTypeSupports::BasicCppSupport
                 spdlog::get("default_pysyslink")->debug("Basic simulation block cpp created");
             }
 
-            std::shared_ptr<PySysLinkBase::SampleTime> GetSampleTime()
+            std::shared_ptr<PySysLinkBase::SampleTime> GetSampleTime() override
             {
                 return this->sampleTime;
             }
@@ -87,26 +114,10 @@ namespace BlockTypeSupports::BasicCppSupport
 
             const std::vector<std::shared_ptr<PySysLinkBase::OutputPort>> ComputeOutputsOfBlock(const std::shared_ptr<PySysLinkBase::SampleTime> sampleTime, double currentTime)
             {
-                std::vector<T> inputValues = {};
-                spdlog::get("default_pysyslink")->debug("Value ammount expected: {}", this->simulationBlock->GetInputPortAmmount());
-                spdlog::get("default_pysyslink")->debug("Value ammount available: {}", this->GetInputPorts().size());
-                for (int i = 0; i < this->simulationBlock->GetInputPortAmmount(); i++)
-                {
-                    auto inputValue = this->inputPorts[i]->GetValue();
-                    auto inputValueSignal = inputValue->TryCastToTyped<T>();
-                    inputValues.push_back(inputValueSignal->GetPayload());
-                }
+                std::vector<T> inputValues = this->GetInputValues();
 
                 std::vector<T> outputValues = this->simulationBlock->CalculateOutputs(inputValues, SampleTimeConversion::PySysLinkTimeToCpp(sampleTime), currentTime);
-
-
-                for (int i = 0; i < this->simulationBlock->GetOutputPortAmmount(); i++)
-                {
-                    std::unique_ptr<PySysLinkBase::UnknownTypeSignalValue> outputValue = this->outputPorts[i]->GetValue();
-                    auto outputValueSignal = outputValue->TryCastToTyped<T>();
-                    outputValueSignal->SetPayload(outputValues[i]);
-                    this->outputPorts[i]->SetValue(std::make_unique<PySysLinkBase::SignalValue<T>>(*outputValueSignal));
-                }
+                this->SetOutputValues(outputValues);
                 
                 return this->GetOutputPorts();
             }
@@ -118,4 +129,4 @@ namespace BlockTypeSupports::BasicCppSupport
     };
 }
 
-#endif /* SRC_BLOCK_TYPE_SUPPORTS_BASIC_CPP_SUPPORT_SIMULATION_BLOCK_CPP */
+#endif /* SRC_SIMULATION_BLOCK_CPP */
