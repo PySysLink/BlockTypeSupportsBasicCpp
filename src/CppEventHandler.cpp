@@ -10,6 +10,6 @@ namespace BlockTypeSupports::BasicCppSupport
 
     void CppEventHandler::NotifyNewValueEvent(double simulationTime, std::string valueId, BlockTypes::BasicCpp::ConfigurationValue value)
     {
-        this->pySysLinkEventsHandler->BlockEventCallback(std::make_shared<PySysLinkBase::ValueUpdateBlockEvent>(simulationTime, "BasicCppBlock" + valueId, value));
+        this->pySysLinkEventsHandler->BlockEventCallback(std::make_shared<PySysLinkBase::ValueUpdateBlockEvent>(simulationTime, "BasicCppBlock/" + valueId, value));
     }
 }

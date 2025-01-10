@@ -48,10 +48,10 @@ namespace BlockTypeSupports::BasicCppSupport
             {
                 for (int i = 0; i < this->simulationBlock->GetOutputPortAmmount(); i++)
                 {
-                    std::unique_ptr<PySysLinkBase::UnknownTypeSignalValue> outputValue = this->outputPorts[i]->GetValue();
+                    std::shared_ptr<PySysLinkBase::UnknownTypeSignalValue> outputValue = this->outputPorts[i]->GetValue();
                     auto outputValueSignal = outputValue->TryCastToTyped<T>();
                     outputValueSignal->SetPayload(outputValues[i]);
-                    this->outputPorts[i]->SetValue(std::make_unique<PySysLinkBase::SignalValue<T>>(*outputValueSignal));
+                    this->outputPorts[i]->SetValue(std::make_shared<PySysLinkBase::SignalValue<T>>(*outputValueSignal));
                 }
             }
 
@@ -62,7 +62,7 @@ namespace BlockTypeSupports::BasicCppSupport
                                 : ISimulationBlock(blockConfiguration, blockEventsHandler) 
             {
                 spdlog::get("default_pysyslink")->debug("Creating basic simulation block cpp...");
-                this->simulationBlock = std::move(simulationBlock);
+                this->simulationBlock = simulationBlock;
 
 
                 std::vector<bool> inputsHasDirectFeedthrough = this->simulationBlock->InputsHasDirectFeedthrough();
@@ -71,15 +71,15 @@ namespace BlockTypeSupports::BasicCppSupport
                 }
                 for (int i = 0; i < this->simulationBlock->GetInputPortAmmount(); i++)
                 {
-                    std::unique_ptr<PySysLinkBase::UnknownTypeSignalValue> signalValue = std::make_unique<PySysLinkBase::SignalValue<T>>(PySysLinkBase::SignalValue<T>(0.0));
-                    auto inputPort = std::make_unique<PySysLinkBase::InputPort>(PySysLinkBase::InputPort(inputsHasDirectFeedthrough[i], std::move(signalValue)));
-                    this->inputPorts.push_back(std::move(inputPort));
+                    std::shared_ptr<PySysLinkBase::UnknownTypeSignalValue> signalValue = std::make_shared<PySysLinkBase::SignalValue<T>>(PySysLinkBase::SignalValue<T>(0.0));
+                    auto inputPort = std::make_shared<PySysLinkBase::InputPort>(PySysLinkBase::InputPort(inputsHasDirectFeedthrough[i], signalValue));
+                    this->inputPorts.push_back(inputPort);
                 }
                 for (int i = 0; i < this->simulationBlock->GetOutputPortAmmount(); i++)
                 {
-                    std::unique_ptr<PySysLinkBase::UnknownTypeSignalValue> signalValue = std::make_unique<PySysLinkBase::SignalValue<T>>(PySysLinkBase::SignalValue<T>(0.0));
-                    auto outputPort = std::make_unique<PySysLinkBase::OutputPort>(PySysLinkBase::OutputPort(std::move(signalValue)));
-                    this->outputPorts.push_back(std::move(outputPort));
+                    std::shared_ptr<PySysLinkBase::UnknownTypeSignalValue> signalValue = std::make_shared<PySysLinkBase::SignalValue<T>>(PySysLinkBase::SignalValue<T>(0.0));
+                    auto outputPort = std::make_shared<PySysLinkBase::OutputPort>(PySysLinkBase::OutputPort(signalValue));
+                    this->outputPorts.push_back(outputPort);
                 }
 
                 spdlog::get("default_pysyslink")->debug("Ports configured...");
