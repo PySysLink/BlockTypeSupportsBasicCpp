@@ -1,7 +1,7 @@
 #ifndef SRC_SIMULATION_BLOCK_CPP_WITH_CONTINUOUS_STATES
 #define SRC_SIMULATION_BLOCK_CPP_WITH_CONTINUOUS_STATES
 
-#include <PySysLinkBase/ISimulationBlockWithContinuousStates.h>
+#include <PySysLinkBase/ContinuousAndOde/ISimulationBlockWithContinuousStates.h>
 #include "SimulationBlockCpp.h"
 
 namespace BlockTypeSupports::BasicCppSupport

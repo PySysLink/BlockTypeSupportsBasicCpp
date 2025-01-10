@@ -8,7 +8,7 @@
 #include <PySysLinkBase/PortsAndSignalValues/OutputPort.h>
 #include <PySysLinkBase/PortsAndSignalValues/SignalValue.h>
 #include <PySysLinkBase/SampleTime.h>
-#include <PySysLinkBase/ContinuousState.h>
+#include <PySysLinkBase/ContinuousAndOde/ContinuousState.h>
 #include <PySysLinkBase/ISimulationBlock.h>
 #include <PySysLinkBase/IBlockEventsHandler.h>
 #include <BlockTypes/BasicCpp/SimulationBlock.h>

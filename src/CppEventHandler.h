@@ -3,6 +3,7 @@
 
 #include <BlockTypes/BasicCpp/IEventHandler.h>
 #include <PySysLinkBase/IBlockEventsHandler.h>
+#include <BlockTypes/BasicCpp/FullySupportedSignalValue.h>
 #include <memory>
 
 namespace BlockTypeSupports::BasicCppSupport
@@ -14,7 +15,7 @@ namespace BlockTypeSupports::BasicCppSupport
         public:
         CppEventHandler(std::shared_ptr<PySysLinkBase::IBlockEventsHandler> pySysLinkEventsHandler);
 
-        void NotifyNewValueEvent(double simulationTime, std::string valueId, BlockTypes::BasicCpp::ConfigurationValue value);
+        void NotifyNewValueEvent(double simulationTime, std::string valueId, BlockTypes::BasicCpp::FullySupportedSignalValue value);
     };
 } // namespace naBlockTypeSupports::BasicCppSupportme
 

@@ -8,7 +8,7 @@ namespace BlockTypeSupports::BasicCppSupport
         this->pySysLinkEventsHandler = pySysLinkEventsHandler;
     }
 
-    void CppEventHandler::NotifyNewValueEvent(double simulationTime, std::string valueId, BlockTypes::BasicCpp::ConfigurationValue value)
+    void CppEventHandler::NotifyNewValueEvent(double simulationTime, std::string valueId, BlockTypes::BasicCpp::FullySupportedSignalValue value)
     {
         this->pySysLinkEventsHandler->BlockEventCallback(std::make_shared<PySysLinkBase::ValueUpdateBlockEvent>(simulationTime, "BasicCppBlock/" + valueId, value));
     }
