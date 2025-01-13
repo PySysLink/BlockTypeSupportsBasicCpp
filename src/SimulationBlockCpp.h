@@ -112,11 +112,11 @@ namespace BlockTypeSupports::BasicCppSupport
                 return this->outputPorts;
             }
 
-            const std::vector<std::shared_ptr<PySysLinkBase::OutputPort>> ComputeOutputsOfBlock(const std::shared_ptr<PySysLinkBase::SampleTime> sampleTime, double currentTime)
+            const std::vector<std::shared_ptr<PySysLinkBase::OutputPort>> _ComputeOutputsOfBlock(const std::shared_ptr<PySysLinkBase::SampleTime> sampleTime, double currentTime, bool isMinorStep=false)
             {
                 std::vector<T> inputValues = this->GetInputValues();
 
-                std::vector<T> outputValues = this->simulationBlock->CalculateOutputs(inputValues, SampleTimeConversion::PySysLinkTimeToCpp(sampleTime), currentTime);
+                std::vector<T> outputValues = this->simulationBlock->CalculateOutputs(inputValues, SampleTimeConversion::PySysLinkTimeToCpp(sampleTime), currentTime, isMinorStep);
                 this->SetOutputValues(outputValues);
                 
                 return this->GetOutputPorts();
