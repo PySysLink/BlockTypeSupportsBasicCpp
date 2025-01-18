@@ -32,6 +32,16 @@ namespace BlockTypeSupports::BasicCppSupport
             }
             return std::make_shared<PySysLinkBase::SampleTime>(PySysLinkBase::SampleTimeType::inherited, supportedSampleTimeTypes);
         }
+        else if (sampleTimeType == BlockTypes::BasicCpp::SampleTimeType::multirate)
+        {
+            std::vector<std::shared_ptr<PySysLinkBase::SampleTime>> multirateSampleTimes = {};
+            std::vector<std::shared_ptr<BlockTypes::BasicCpp::SampleTime>> multirateSampleTimesCpp = sampleTime->GetMultirateSampleTimes();
+            for (int i = 0; i < multirateSampleTimesCpp.size(); i++)
+            {
+                multirateSampleTimes.push_back(SampleTimeConversion::CppSampleTimeToPySysLink(multirateSampleTimesCpp[i]));
+            }
+            return std::make_shared<PySysLinkBase::SampleTime>(PySysLinkBase::SampleTimeType::multirate, multirateSampleTimes, sampleTime->GetInputMultirateInheritedSampleTimeIndex(), sampleTime->GetOutputMultirateInheritedSampleTimeIndex());
+        }
         else 
         {
             throw std::runtime_error("Unsupported sample time type.");
@@ -63,6 +73,16 @@ namespace BlockTypeSupports::BasicCppSupport
             }
             return std::make_shared<BlockTypes::BasicCpp::SampleTime>(BlockTypes::BasicCpp::SampleTimeType::inherited, supportedSampleTimeTypes);
         }
+        else if (sampleTimeType == PySysLinkBase::SampleTimeType::multirate)
+        {
+            std::vector<std::shared_ptr<BlockTypes::BasicCpp::SampleTime>> multirateSampleTimes = {};
+            std::vector<std::shared_ptr<PySysLinkBase::SampleTime>> multirateSampleTimesPySysLink = sampleTime->GetMultirateSampleTimes();
+            for (int i = 0; i < multirateSampleTimesPySysLink.size(); i++)
+            {
+                multirateSampleTimes.push_back(SampleTimeConversion::PySysLinkTimeToCpp(multirateSampleTimesPySysLink[i]));
+            }
+            return std::make_shared<BlockTypes::BasicCpp::SampleTime>(BlockTypes::BasicCpp::SampleTimeType::multirate, multirateSampleTimes, sampleTime->GetInputMultirateInheritedSampleTimeIndex(), sampleTime->GetOutputMultirateInheritedSampleTimeIndex());
+        }
         else 
         {
             throw std::runtime_error("Unsupported sample time type.");
@@ -87,6 +107,10 @@ namespace BlockTypeSupports::BasicCppSupport
         {
             return PySysLinkBase::SampleTimeType::inherited;
         }
+        else if (sampleTimeType == BlockTypes::BasicCpp::SampleTimeType::multirate)
+        {
+            return PySysLinkBase::SampleTimeType::multirate;
+        }
         else
         {
             throw std::runtime_error("Unsupported sample time type.");
@@ -110,6 +134,10 @@ namespace BlockTypeSupports::BasicCppSupport
         else if (sampleTimeType == PySysLinkBase::SampleTimeType::inherited)
         {
             return BlockTypes::BasicCpp::SampleTimeType::inherited;
+        }
+        else if (sampleTimeType == PySysLinkBase::SampleTimeType::multirate)
+        {
+            return BlockTypes::BasicCpp::SampleTimeType::multirate;
         }
         else
         {
