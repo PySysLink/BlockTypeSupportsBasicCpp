@@ -91,7 +91,7 @@ namespace BlockTypeSupports::BasicCppSupport
                 spdlog::get("default_pysyslink")->debug("Basic simulation block cpp created");
             }
 
-            std::shared_ptr<PySysLinkBase::SampleTime> GetSampleTime() override
+            const std::shared_ptr<PySysLinkBase::SampleTime> GetSampleTime() const override
             {
                 return this->sampleTime;
             }

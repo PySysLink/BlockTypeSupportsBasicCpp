@@ -40,7 +40,7 @@ namespace BlockTypeSupports::BasicCppSupport
             {
                 multirateSampleTimes.push_back(SampleTimeConversion::CppSampleTimeToPySysLink(multirateSampleTimesCpp[i]));
             }
-            return std::make_shared<PySysLinkBase::SampleTime>(PySysLinkBase::SampleTimeType::multirate, multirateSampleTimes, sampleTime->GetInputMultirateInheritedSampleTimeIndex(), sampleTime->GetOutputMultirateInheritedSampleTimeIndex());
+            return std::make_shared<PySysLinkBase::SampleTime>(PySysLinkBase::SampleTimeType::multirate, multirateSampleTimes, sampleTime->GetInputMultirateSampleTimeIndex(), sampleTime->GetOutputMultirateSampleTimeIndex());
         }
         else 
         {
@@ -81,7 +81,7 @@ namespace BlockTypeSupports::BasicCppSupport
             {
                 multirateSampleTimes.push_back(SampleTimeConversion::PySysLinkTimeToCpp(multirateSampleTimesPySysLink[i]));
             }
-            return std::make_shared<BlockTypes::BasicCpp::SampleTime>(BlockTypes::BasicCpp::SampleTimeType::multirate, multirateSampleTimes, sampleTime->GetInputMultirateInheritedSampleTimeIndex(), sampleTime->GetOutputMultirateInheritedSampleTimeIndex());
+            return std::make_shared<BlockTypes::BasicCpp::SampleTime>(BlockTypes::BasicCpp::SampleTimeType::multirate, multirateSampleTimes, sampleTime->GetInputMultirateSampleTimeIndex(), sampleTime->GetOutputMultirateSampleTimeIndex());
         }
         else 
         {
