@@ -43,10 +43,10 @@ namespace BlockTypeSupports::BasicCppSupport
                 return this->simulationBlockWithContinuousStates->GetContinuousStateJacobians(inputValues, SampleTimeConversion::PySysLinkTimeToCpp(sampleTime), currentTime);
             }
 
-            const std::vector<double> GetEvents(const std::shared_ptr<PySysLinkBase::SampleTime> sampleTime, double currentTime) const
+            const std::vector<std::pair<double, double>> GetEvents(const std::shared_ptr<PySysLinkBase::SampleTime> sampleTime, double eventTime, std::vector<double> eventTimeStates) const
             {
                 std::vector<T> inputValues = this->GetInputValues();
-                return this->simulationBlockWithContinuousStates->GetEvents(inputValues, SampleTimeConversion::PySysLinkTimeToCpp(sampleTime), currentTime);
+                return this->simulationBlockWithContinuousStates->GetEvents(inputValues, SampleTimeConversion::PySysLinkTimeToCpp(sampleTime), eventTime, eventTimeStates);
             }
 
             using SimulationBlockCpp<T>::GetSampleTime;
