@@ -5,6 +5,7 @@
 #include "BlockLibrariesPlugingLoader.h"
 #include <algorithm>
 #include "CppEventHandler.h"
+#include "LoggerInstance.h"
 
 namespace BlockTypeSupports::BasicCppSupport
 {
@@ -17,10 +18,6 @@ namespace BlockTypeSupports::BasicCppSupport
         this->factoryRegistryComplex = blockLibrariesPlugingLoaderComplex->LoadPlugins("/usr/local/lib");
     }
 
-    // BlockFactoryCpp::~BlockFactoryCpp()
-    // {
-
-    // }
 
     std::unique_ptr<PySysLinkBase::ISimulationBlock> BlockFactoryCpp::CreateBlock(std::map<std::string, PySysLinkBase::ConfigurationValue> blockConfiguration, std::shared_ptr<PySysLinkBase::IBlockEventsHandler> blockEventsHandler)
     {
@@ -32,7 +29,7 @@ namespace BlockTypeSupports::BasicCppSupport
             signalType = PySysLinkBase::ConfigurationValueManager::TryGetConfigurationValue<std::string>("SignalType", blockConfiguration);
         } catch(std::out_of_range) {}
 
-        spdlog::get("default_pysyslink")->debug("{} type block to create with signal type {}...", blockClass, signalType);
+        LoggerInstance::GetLogger()->debug("{} type block to create with signal type {}...", blockClass, signalType);
         
         if (signalType == "Double")
         {

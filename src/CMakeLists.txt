@@ -3,7 +3,8 @@ add_library(BlockTypeSupportsBasicCppSupport SHARED RegisterBlockFactories.cpp
             SampleTimeConversion.cpp
             BlockFactoryCpp.cpp
             RegisterBlockFactories.cpp
-            CppEventHandler.cpp)
+            CppEventHandler.cpp
+            LoggerInstance.cpp)
 
 include(FetchContent)
 

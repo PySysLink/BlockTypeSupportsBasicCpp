@@ -1,6 +1,7 @@
 #include "SampleTimeConversion.h"
 #include <stdexcept>
 #include "spdlog/spdlog.h"
+#include "LoggerInstance.h"
 
 namespace BlockTypeSupports::BasicCppSupport
 {
@@ -23,11 +24,11 @@ namespace BlockTypeSupports::BasicCppSupport
         {
             std::vector<PySysLinkBase::SampleTimeType> supportedSampleTimeTypes = {};
             std::vector<BlockTypes::BasicCpp::SampleTimeType> supportedSampleTimeTypesCpp = sampleTime->GetSupportedSampleTimeTypesForInheritance();
-            spdlog::get("default_pysyslink")->debug("Sample time account: {}", supportedSampleTimeTypesCpp.size());
+            LoggerInstance::GetLogger()->debug("Sample time account: {}", supportedSampleTimeTypesCpp.size());
 
             for (int i = 0; i < supportedSampleTimeTypesCpp.size(); i++)
             {
-                spdlog::get("default_pysyslink")->debug("new sample time inher acquired");
+                LoggerInstance::GetLogger()->debug("new sample time inher acquired");
                 supportedSampleTimeTypes.push_back(SampleTimeConversion::CppSampleTimeTypeToPySysLink(supportedSampleTimeTypesCpp[i]));
             }
             return std::make_shared<PySysLinkBase::SampleTime>(PySysLinkBase::SampleTimeType::inherited, supportedSampleTimeTypes);

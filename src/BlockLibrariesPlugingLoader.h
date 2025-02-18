@@ -1,5 +1,5 @@
-#ifndef BLOCK_TYPE_SUPPORTS_BASIC_CPP_SRC_BLOCK_LIBRARIES_PLUGING_LOADER
-#define BLOCK_TYPE_SUPPORTS_BASIC_CPP_SRC_BLOCK_LIBRARIES_PLUGING_LOADER
+#ifndef SRC_BLOCK_LIBRARIES_PLUGING_LOADER
+#define SRC_BLOCK_LIBRARIES_PLUGING_LOADER
 
 #include <map>
 #include <memory>
@@ -9,6 +9,8 @@
 #include <filesystem>
 #include <type_traits>
 #include <stdexcept>
+#include <complex>
+#include <iostream>
 
 #include <BlockTypes/BasicCpp/IBasicCppBlockFactory.h>
 
@@ -32,27 +34,37 @@ template <typename T>
                 {
                     throw std::invalid_argument("Template type used does not seem to be supported, unable to get typeNameExtender");
                 }
-
+                
+                std::cout << "typeNameExtender: " << typeNameExtender << std::endl;
 
                 std::map<std::string, std::unique_ptr<BlockTypes::BasicCpp::IBasicCppBlockFactory<T>>> factoryRegistry;
                 
                 for (const auto& pluginPath : this->FindSharedLibraries(pluginDirectory)) {
+                    std::cout << "Pluging to load: " << pluginPath << std::endl;
+                    LoggerInstance::GetLogger()->debug("Trying to load pluging: {}", pluginPath);
+
                     void* handle = dlopen(pluginPath.c_str(), RTLD_LAZY);
                     if (!handle) {
-                        spdlog::get("default_pysyslink")->error("Failed to load block library plugin: {}", pluginPath);
-                        spdlog::get("default_pysyslink")->error(dlerror());
+                        LoggerInstance::GetLogger()->error("Failed to load block library plugin: {}", pluginPath);
+                        LoggerInstance::GetLogger()->error(dlerror());
                         continue;
                     }
+                    LoggerInstance::GetLogger()->debug("Handle obtained for pluging: {}", pluginPath);
+                    std::cout << "Handle obtained for pluging: " << pluginPath << std::endl;
 
                     auto registerFunc = reinterpret_cast<void(*)(std::map<std::string, std::unique_ptr<BlockTypes::BasicCpp::IBasicCppBlockFactory<T>>>&)>(dlsym(handle, ("RegisterBasicCppFactories" + typeNameExtender).c_str()));
+                    LoggerInstance::GetLogger()->debug("registerFunc get from pluging: {}", pluginPath);
+                    std::cout << "registerFunc get from pluging: " << pluginPath << std::endl;
 
                     if (!registerFunc) {
-                        spdlog::get("default_pysyslink")->error("Failed to find entry point in: {}", pluginPath);
-                        spdlog::get("default_pysyslink")->error(dlerror());
+                        LoggerInstance::GetLogger()->error("Failed to find entry point in: {}", pluginPath);
+                        LoggerInstance::GetLogger()->error(dlerror());
                         dlclose(handle);
                         continue;
                     }
-                    spdlog::get("default_pysyslink")->debug("Block library pluging loaded: {} with type: {}", pluginPath, typeNameExtender);
+                    std::cout << "Block library pluging loaded: " << pluginPath << std::endl;
+
+                    LoggerInstance::GetLogger()->debug("Block library pluging loaded: {} with type: {}", pluginPath, typeNameExtender);
                     registerFunc(factoryRegistry);
                 }
                 return factoryRegistry;
@@ -76,7 +88,7 @@ template <typename T>
                         }
                     }
                 } catch (const std::filesystem::filesystem_error& e) {
-                    spdlog::get("default_pysyslink")->error("Error accessing directory: ", e.what());
+                    LoggerInstance::GetLogger()->error("Error accessing directory: ", e.what());
                 }
 
                 return sharedLibraries;
@@ -90,4 +102,4 @@ template <typename T>
 
 } // namespace BlockTypeSupports::BasicCppSupport
 
-#endif /* BLOCK_TYPE_SUPPORTS_BASIC_CPP_SRC_BLOCK_LIBRARIES_PLUGING_LOADER */
+#endif /* SRC_BLOCK_LIBRARIES_PLUGING_LOADER */

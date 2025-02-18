@@ -16,6 +16,7 @@
 #include <spdlog/spdlog.h>
 
 #include "SampleTimeConversion.h"
+#include "LoggerInstance.h"
 
 
 namespace BlockTypeSupports::BasicCppSupport
@@ -61,7 +62,7 @@ namespace BlockTypeSupports::BasicCppSupport
                                 std::shared_ptr<PySysLinkBase::IBlockEventsHandler> blockEventsHandler) 
                                 : ISimulationBlock(blockConfiguration, blockEventsHandler) 
             {
-                spdlog::get("default_pysyslink")->debug("Creating basic simulation block cpp...");
+                LoggerInstance::GetLogger()->debug("Creating basic simulation block cpp...");
                 this->simulationBlock = simulationBlock;
 
 
@@ -82,13 +83,13 @@ namespace BlockTypeSupports::BasicCppSupport
                     this->outputPorts.push_back(outputPort);
                 }
 
-                spdlog::get("default_pysyslink")->debug("Ports configured...");
+                LoggerInstance::GetLogger()->debug("Ports configured...");
 
                 std::shared_ptr<BlockTypes::BasicCpp::SampleTime> sampleTimeCpp = this->simulationBlock->GetSampleTime();
                 this->sampleTime = SampleTimeConversion::CppSampleTimeToPySysLink(sampleTimeCpp);
                 
 
-                spdlog::get("default_pysyslink")->debug("Basic simulation block cpp created");
+                LoggerInstance::GetLogger()->debug("Basic simulation block cpp created");
             }
 
             const std::shared_ptr<PySysLinkBase::SampleTime> GetSampleTime() const override
