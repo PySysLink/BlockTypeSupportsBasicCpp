@@ -19,7 +19,7 @@ namespace BlockTypeSupports::BasicCppSupport
     }
 
 
-    std::unique_ptr<PySysLinkBase::ISimulationBlock> BlockFactoryCpp::CreateBlock(std::map<std::string, PySysLinkBase::ConfigurationValue> blockConfiguration, std::shared_ptr<PySysLinkBase::IBlockEventsHandler> blockEventsHandler)
+    std::shared_ptr<PySysLinkBase::ISimulationBlock> BlockFactoryCpp::CreateBlock(std::map<std::string, PySysLinkBase::ConfigurationValue> blockConfiguration, std::shared_ptr<PySysLinkBase::IBlockEventsHandler> blockEventsHandler)
     {
         std::string blockClass = PySysLinkBase::ConfigurationValueManager::TryGetConfigurationValue<std::string>("BlockClass", blockConfiguration);
         
@@ -33,11 +33,11 @@ namespace BlockTypeSupports::BasicCppSupport
         
         if (signalType == "Double")
         {
-            return std::move(this->CreateBlockFromRegistry<double>(this->factoryRegistryDouble, blockClass, blockConfiguration, blockEventsHandler));
+            return this->CreateBlockFromRegistry<double>(this->factoryRegistryDouble, blockClass, blockConfiguration, blockEventsHandler);
         }
         else if (signalType == "Complex")
         {
-            return std::move(this->CreateBlockFromRegistry<std::complex<double>>(this->factoryRegistryComplex, blockClass, blockConfiguration, blockEventsHandler));
+            return this->CreateBlockFromRegistry<std::complex<double>>(this->factoryRegistryComplex, blockClass, blockConfiguration, blockEventsHandler);
         }
         else
         {

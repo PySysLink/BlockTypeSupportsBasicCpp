@@ -19,7 +19,7 @@ namespace BlockTypeSupports::BasicCppSupport
             std::map<std::string, std::unique_ptr<BlockTypes::BasicCpp::IBasicCppBlockFactory<std::complex<double>>>> factoryRegistryComplex;
 
             template <typename T>
-            std::unique_ptr<SimulationBlockCpp<T>> CreateBlockFromRegistry(std::map<std::string, std::unique_ptr<BlockTypes::BasicCpp::IBasicCppBlockFactory<T>>>& registry, std::string blockClass, std::map<std::string, 
+            std::shared_ptr<SimulationBlockCpp<T>> CreateBlockFromRegistry(std::map<std::string, std::unique_ptr<BlockTypes::BasicCpp::IBasicCppBlockFactory<T>>>& registry, std::string blockClass, std::map<std::string, 
                                                                             PySysLinkBase::ConfigurationValue> blockConfiguration, std::shared_ptr<PySysLinkBase::IBlockEventsHandler> blockEventsHandler)
             {
                 for (auto const& [key, val] : registry)
@@ -35,11 +35,11 @@ namespace BlockTypeSupports::BasicCppSupport
                         std::shared_ptr<BlockTypes::BasicCpp::SimulationBlockWithContinuousStates<T>> blockWithContinuousStates = std::dynamic_pointer_cast<BlockTypes::BasicCpp::SimulationBlockWithContinuousStates<T>>(simulationBlock);
                         if (blockWithContinuousStates)
                         {
-                            return std::make_unique<SimulationBlockCppWithContinuousStates<T>>(std::move(blockWithContinuousStates), blockConfiguration, blockEventsHandler);
+                            return std::make_shared<SimulationBlockCppWithContinuousStates<T>>(std::move(blockWithContinuousStates), blockConfiguration, blockEventsHandler);
                         }
                         else
                         {
-                            return std::make_unique<SimulationBlockCpp<T>>(std::move(simulationBlock), blockConfiguration, blockEventsHandler);
+                            return std::make_shared<SimulationBlockCpp<T>>(std::move(simulationBlock), blockConfiguration, blockEventsHandler);
                         }
                     }
                 }
@@ -49,7 +49,7 @@ namespace BlockTypeSupports::BasicCppSupport
             
         public:
             BlockFactoryCpp();
-            std::unique_ptr<PySysLinkBase::ISimulationBlock> CreateBlock(std::map<std::string, PySysLinkBase::ConfigurationValue> blockConfiguration, std::shared_ptr<PySysLinkBase::IBlockEventsHandler> blockEventsHandler);
+            std::shared_ptr<PySysLinkBase::ISimulationBlock> CreateBlock(std::map<std::string, PySysLinkBase::ConfigurationValue> blockConfiguration, std::shared_ptr<PySysLinkBase::IBlockEventsHandler> blockEventsHandler);
     };
 } // namespace BlockTypeSupports::BasicCppSupport
 
