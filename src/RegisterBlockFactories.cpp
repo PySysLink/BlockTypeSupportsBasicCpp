@@ -12,5 +12,5 @@ extern "C" void RegisterBlockFactories(std::map<std::string, std::shared_ptr<PyS
 
 extern "C" void RegisterSpdlogLogger(std::shared_ptr<spdlog::logger> logger) {
     BlockTypeSupports::BasicCppSupport::LoggerInstance::SetLogger(logger);
-    BlockTypeSupports::BasicCppSupport::LoggerInstance::GetLogger()->debug("Logger from pluging BlockTypeSupportsBasicCpp!");
+    BlockTypeSupports::BasicCppSupport::LoggerInstance::GetLogger()->debug("Logger from plugin BlockTypeSupportsBasicCpp!");
 }

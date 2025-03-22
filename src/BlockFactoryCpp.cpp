@@ -2,7 +2,7 @@
 #include <stdexcept>
 #include "SimulationBlockCpp.h"
 #include "spdlog/spdlog.h"
-#include "BlockLibrariesPlugingLoader.h"
+#include "BlockLibrariesPluginLoader.h"
 #include <algorithm>
 #include "CppEventHandler.h"
 #include "LoggerInstance.h"
@@ -11,11 +11,11 @@ namespace BlockTypeSupports::BasicCppSupport
 {
     BlockFactoryCpp::BlockFactoryCpp()
     {
-        std::unique_ptr<BlockLibrariesPlugingLoader<double>> blockLibrariesPlugingLoaderDouble = std::make_unique<BlockLibrariesPlugingLoader<double>>();
-        this->factoryRegistryDouble = blockLibrariesPlugingLoaderDouble->LoadPlugins("/usr/local/lib");
+        std::unique_ptr<BlockLibrariesPluginLoader<double>> blockLibrariesPluginLoaderDouble = std::make_unique<BlockLibrariesPluginLoader<double>>();
+        this->factoryRegistryDouble = blockLibrariesPluginLoaderDouble->LoadPlugins("/usr/local/lib");
 
-        std::unique_ptr<BlockLibrariesPlugingLoader<std::complex<double>>> blockLibrariesPlugingLoaderComplex = std::make_unique<BlockLibrariesPlugingLoader<std::complex<double>>>();
-        this->factoryRegistryComplex = blockLibrariesPlugingLoaderComplex->LoadPlugins("/usr/local/lib");
+        std::unique_ptr<BlockLibrariesPluginLoader<std::complex<double>>> blockLibrariesPluginLoaderComplex = std::make_unique<BlockLibrariesPluginLoader<std::complex<double>>>();
+        this->factoryRegistryComplex = blockLibrariesPluginLoaderComplex->LoadPlugins("/usr/local/lib");
     }
 
 

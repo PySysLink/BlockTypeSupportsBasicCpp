@@ -9,7 +9,7 @@ namespace BlockTypeSupports::BasicCppSupport
 {
     class SampleTimeConversion
     /*
-    This boilerplate code is necessary, because it can not be enshured for all block type support modules that they will use the same
+    This boilerplate code is necessary, because it can not be ensured for all block type support modules that they will use the same
     sample time types as PySysLinkBase. Since a block type should not have dependency on any PySysLink implementation (e.g. PySysLinkBase),
     it must include its own sample time types definitions, and the support module has to convert them to PySysLinkBase
     */

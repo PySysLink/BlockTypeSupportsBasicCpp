@@ -32,10 +32,10 @@ namespace BlockTypeSupports::BasicCppSupport
                 this->simulationBlockWithContinuousStates->SetContinuousStates(newStates);
             }
 
-            const std::vector<double> GetContinousStateDerivatives(const std::shared_ptr<PySysLinkBase::SampleTime> sampleTime, double currentTime) const
+            const std::vector<double> GetContinuousStateDerivatives(const std::shared_ptr<PySysLinkBase::SampleTime> sampleTime, double currentTime) const
             {
                 std::vector<T> inputValues = this->GetInputValues();
-                return this->simulationBlockWithContinuousStates->GetContinousStateDerivatives(inputValues, SampleTimeConversion::PySysLinkTimeToCpp(sampleTime), currentTime);
+                return this->simulationBlockWithContinuousStates->GetContinuousStateDerivatives(inputValues, SampleTimeConversion::PySysLinkTimeToCpp(sampleTime), currentTime);
             }
             const std::vector<std::vector<double>> GetContinuousStateJacobians(const std::shared_ptr<PySysLinkBase::SampleTime> sampleTime, double currentTime) const
             {

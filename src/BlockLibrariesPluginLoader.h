@@ -17,7 +17,7 @@
 namespace BlockTypeSupports::BasicCppSupport {
 
 template <typename T>
-    class BlockLibrariesPlugingLoader {
+    class BlockLibrariesPluginLoader {
         public:
             std::map<std::string, std::unique_ptr<BlockTypes::BasicCpp::IBasicCppBlockFactory<T>>> LoadPlugins(const std::string& pluginDirectory) 
             {
@@ -40,8 +40,8 @@ template <typename T>
                 std::map<std::string, std::unique_ptr<BlockTypes::BasicCpp::IBasicCppBlockFactory<T>>> factoryRegistry;
                 
                 for (const auto& pluginPath : this->FindSharedLibraries(pluginDirectory)) {
-                    std::cout << "Pluging to load: " << pluginPath << std::endl;
-                    LoggerInstance::GetLogger()->debug("Trying to load pluging: {}", pluginPath);
+                    std::cout << "Plugin to load: " << pluginPath << std::endl;
+                    LoggerInstance::GetLogger()->debug("Trying to load plugin: {}", pluginPath);
 
                     void* handle = dlopen(pluginPath.c_str(), RTLD_LAZY);
                     if (!handle) {
@@ -49,12 +49,12 @@ template <typename T>
                         LoggerInstance::GetLogger()->error(dlerror());
                         continue;
                     }
-                    LoggerInstance::GetLogger()->debug("Handle obtained for pluging: {}", pluginPath);
-                    std::cout << "Handle obtained for pluging: " << pluginPath << std::endl;
+                    LoggerInstance::GetLogger()->debug("Handle obtained for plugin: {}", pluginPath);
+                    std::cout << "Handle obtained for plugin: " << pluginPath << std::endl;
 
                     auto registerFunc = reinterpret_cast<void(*)(std::map<std::string, std::unique_ptr<BlockTypes::BasicCpp::IBasicCppBlockFactory<T>>>&)>(dlsym(handle, ("RegisterBasicCppFactories" + typeNameExtender).c_str()));
-                    LoggerInstance::GetLogger()->debug("registerFunc get from pluging: {}", pluginPath);
-                    std::cout << "registerFunc get from pluging: " << pluginPath << std::endl;
+                    LoggerInstance::GetLogger()->debug("registerFunc get from plugin: {}", pluginPath);
+                    std::cout << "registerFunc get from plugin: " << pluginPath << std::endl;
 
                     if (!registerFunc) {
                         LoggerInstance::GetLogger()->error("Failed to find entry point in: {}", pluginPath);
@@ -62,9 +62,9 @@ template <typename T>
                         dlclose(handle);
                         continue;
                     }
-                    std::cout << "Block library pluging loaded: " << pluginPath << std::endl;
+                    std::cout << "Block library plugin loaded: " << pluginPath << std::endl;
 
-                    LoggerInstance::GetLogger()->debug("Block library pluging loaded: {} with type: {}", pluginPath, typeNameExtender);
+                    LoggerInstance::GetLogger()->debug("Block library plugin loaded: {} with type: {}", pluginPath, typeNameExtender);
                     registerFunc(factoryRegistry);
                 }
                 return factoryRegistry;
