@@ -17,44 +17,15 @@
 
 #include "SampleTimeConversion.h"
 #include "LoggerInstance.h"
+#include "SimulationBlockCppCommons.h"
 
 
 namespace BlockTypeSupports::BasicCppSupport
 {
     template <typename T>
-    class SimulationBlockCpp : public virtual PySysLinkBase::ISimulationBlock {
+    class SimulationBlockCpp : public PySysLinkBase::ISimulationBlock {
         protected:
-            std::shared_ptr<BlockTypes::BasicCpp::SimulationBlock<T>> simulationBlock;
-            std::shared_ptr<PySysLinkBase::SampleTime> sampleTime;
-            std::string id;
-            std::string name;
-        
-            std::vector<std::shared_ptr<PySysLinkBase::InputPort>> inputPorts;
-            std::vector<std::shared_ptr<PySysLinkBase::OutputPort>> outputPorts;
-
-            std::vector<T> GetInputValues() const
-            {
-                std::vector<T> inputValues = {};
-                for (int i = 0; i < this->simulationBlock->GetInputPortAmount(); i++)
-                {
-                    auto inputValue = this->inputPorts[i]->GetValue();
-                    auto inputValueSignal = inputValue->TryCastToTyped<T>();
-                    inputValues.push_back(inputValueSignal->GetPayload());
-                }
-
-                return inputValues;
-            }
-
-            void SetOutputValues(std::vector<T> outputValues)
-            {
-                for (int i = 0; i < this->simulationBlock->GetOutputPortAmount(); i++)
-                {
-                    std::shared_ptr<PySysLinkBase::UnknownTypeSignalValue> outputValue = this->outputPorts[i]->GetValue();
-                    auto outputValueSignal = outputValue->TryCastToTyped<T>();
-                    outputValueSignal->SetPayload(outputValues[i]);
-                    this->outputPorts[i]->SetValue(std::make_shared<PySysLinkBase::SignalValue<T>>(*outputValueSignal));
-                }
-            }
+            std::shared_ptr<SimulationBlockCppCommons<T>> simulationBlockCppCommons;
 
         public:
             SimulationBlockCpp(std::shared_ptr<BlockTypes::BasicCpp::SimulationBlock<T>> simulationBlock, 
@@ -62,81 +33,49 @@ namespace BlockTypeSupports::BasicCppSupport
                                 std::shared_ptr<PySysLinkBase::IBlockEventsHandler> blockEventsHandler) 
                                 : ISimulationBlock(blockConfiguration, blockEventsHandler) 
             {
-                LoggerInstance::GetLogger()->debug("Creating basic simulation block cpp...");
-                this->simulationBlock = simulationBlock;
-
-
-                std::vector<bool> inputsHasDirectFeedthrough = this->simulationBlock->InputsHasDirectFeedthrough();
-                if (inputsHasDirectFeedthrough.size() != this->simulationBlock->GetInputPortAmount()) {
-                    throw std::runtime_error("Mismatch between the number of input ports and the size of the inputsHasDirectFeedthrough vector");
-                }
-                for (int i = 0; i < this->simulationBlock->GetInputPortAmount(); i++)
-                {
-                    std::shared_ptr<PySysLinkBase::UnknownTypeSignalValue> signalValue = std::make_shared<PySysLinkBase::SignalValue<T>>(PySysLinkBase::SignalValue<T>(0.0));
-                    auto inputPort = std::make_shared<PySysLinkBase::InputPort>(PySysLinkBase::InputPort(inputsHasDirectFeedthrough[i], signalValue));
-                    this->inputPorts.push_back(inputPort);
-                }
-                for (int i = 0; i < this->simulationBlock->GetOutputPortAmount(); i++)
-                {
-                    std::shared_ptr<PySysLinkBase::UnknownTypeSignalValue> signalValue = std::make_shared<PySysLinkBase::SignalValue<T>>(PySysLinkBase::SignalValue<T>(0.0));
-                    auto outputPort = std::make_shared<PySysLinkBase::OutputPort>(PySysLinkBase::OutputPort(signalValue));
-                    this->outputPorts.push_back(outputPort);
-                }
-
-                LoggerInstance::GetLogger()->debug("Ports configured...");
-
-                std::shared_ptr<BlockTypes::BasicCpp::SampleTime> sampleTimeCpp = this->simulationBlock->GetSampleTime();
-                this->sampleTime = SampleTimeConversion::CppSampleTimeToPySysLink(sampleTimeCpp);
-                
-
-                LoggerInstance::GetLogger()->debug("Basic simulation block cpp created");
+                this->simulationBlockCppCommons = std::make_shared<SimulationBlockCppCommons<T>>(simulationBlock, blockConfiguration, blockEventsHandler);
             }
 
             const std::shared_ptr<PySysLinkBase::SampleTime> GetSampleTime() const override
             {
-                return this->sampleTime;
+                return this->simulationBlockCppCommons->GetSampleTime();
             }
             
             void SetSampleTime(std::shared_ptr<PySysLinkBase::SampleTime> sampleTime)
             {
-                this->sampleTime = sampleTime;
+                this->simulationBlockCppCommons->SetSampleTime(sampleTime);
             }
 
 
             std::vector<std::shared_ptr<PySysLinkBase::InputPort>> GetInputPorts() const
             {
-                return this->inputPorts;
+                return this->simulationBlockCppCommons->GetInputPorts();
             }
                     
             const std::vector<std::shared_ptr<PySysLinkBase::OutputPort>> GetOutputPorts() const
             {
-                return this->outputPorts;
+                return this->simulationBlockCppCommons->GetOutputPorts();
             }
 
             const std::vector<std::shared_ptr<PySysLinkBase::OutputPort>> _ComputeOutputsOfBlock(const std::shared_ptr<PySysLinkBase::SampleTime> sampleTime, double currentTime, bool isMinorStep=false)
             {
-                std::vector<T> inputValues = this->GetInputValues();
+                return this->simulationBlockCppCommons->_ComputeOutputsOfBlock(sampleTime, currentTime, isMinorStep);
 
-                std::vector<T> outputValues = this->simulationBlock->CalculateOutputs(inputValues, SampleTimeConversion::PySysLinkTimeToCpp(sampleTime), currentTime, isMinorStep);
-                this->SetOutputValues(outputValues);
-                
-                return this->GetOutputPorts();
             }
 
             bool TryUpdateConfigurationValue(std::string keyName, PySysLinkBase::ConfigurationValue value)
             {
-                return this->simulationBlock->TryUpdateConfigurationValue(keyName, value);
+                return this->simulationBlockCppCommons->TryUpdateConfigurationValue(keyName, value);
             }
 
             const std::vector<std::pair<double, double>> GetEvents(const std::shared_ptr<PySysLinkBase::SampleTime> sampleTime, double eventTime, std::vector<double> eventTimeStates) const override
             {
-                std::vector<T> inputValues = this->GetInputValues();
-                return this->simulationBlock->GetEvents(inputValues, SampleTimeConversion::PySysLinkTimeToCpp(sampleTime), eventTime, eventTimeStates);
+                return this->simulationBlockCppCommons->GetEvents(sampleTime, eventTime, eventTimeStates);
             }
 
-            virtual const std::vector<double> GetKnownEvents(const std::shared_ptr<PySysLinkBase::SampleTime> resolvedSampleTime, double simulationStartTime, double simulationEndTime) const override
+            const std::vector<double> GetKnownEvents(const std::shared_ptr<PySysLinkBase::SampleTime> resolvedSampleTime, double simulationStartTime, double simulationEndTime) const override
             {
-                return this->simulationBlock->GetKnownEvents(SampleTimeConversion::PySysLinkTimeToCpp(resolvedSampleTime), simulationStartTime, simulationEndTime);
+                return this->simulationBlockCppCommons->GetKnownEvents(resolvedSampleTime, simulationStartTime, simulationEndTime);
             }
     };
 }

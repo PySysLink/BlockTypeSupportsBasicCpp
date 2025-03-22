@@ -19,7 +19,7 @@ namespace BlockTypeSupports::BasicCppSupport
             std::map<std::string, std::unique_ptr<BlockTypes::BasicCpp::IBasicCppBlockFactory<std::complex<double>>>> factoryRegistryComplex;
 
             template <typename T>
-            std::shared_ptr<SimulationBlockCpp<T>> CreateBlockFromRegistry(std::map<std::string, std::unique_ptr<BlockTypes::BasicCpp::IBasicCppBlockFactory<T>>>& registry, std::string blockClass, std::map<std::string, 
+            std::shared_ptr<PySysLinkBase::ISimulationBlock> CreateBlockFromRegistry(std::map<std::string, std::unique_ptr<BlockTypes::BasicCpp::IBasicCppBlockFactory<T>>>& registry, std::string blockClass, std::map<std::string, 
                                                                             PySysLinkBase::ConfigurationValue> blockConfiguration, std::shared_ptr<PySysLinkBase::IBlockEventsHandler> blockEventsHandler)
             {
                 for (auto const& [key, val] : registry)
