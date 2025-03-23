@@ -103,10 +103,10 @@ namespace BlockTypeSupports::BasicCppSupport
                 return this->simulationBlock->TryUpdateConfigurationValue(keyName, value);
             }
 
-            const std::vector<std::pair<double, double>> GetEvents(const std::shared_ptr<PySysLinkBase::SampleTime> sampleTime, double eventTime, std::vector<double> eventTimeStates) const 
+            const std::vector<std::pair<double, double>> GetEvents(const std::shared_ptr<PySysLinkBase::SampleTime> sampleTime, double eventTime, std::vector<double> eventTimeStates, bool includeKnownEvents=false) const 
             {
                 std::vector<T> inputValues = this->GetInputValues();
-                return this->simulationBlock->GetEvents(inputValues, SampleTimeConversion::PySysLinkTimeToCpp(sampleTime), eventTime, eventTimeStates);
+                return this->simulationBlock->GetEvents(inputValues, SampleTimeConversion::PySysLinkTimeToCpp(sampleTime), eventTime, eventTimeStates, includeKnownEvents);
             }
 
             const std::vector<double> GetKnownEvents(const std::shared_ptr<PySysLinkBase::SampleTime> resolvedSampleTime, double simulationStartTime, double simulationEndTime) const 

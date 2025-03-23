@@ -68,9 +68,9 @@ namespace BlockTypeSupports::BasicCppSupport
                 return this->simulationBlockCppCommons->TryUpdateConfigurationValue(keyName, value);
             }
 
-            const std::vector<std::pair<double, double>> GetEvents(const std::shared_ptr<PySysLinkBase::SampleTime> sampleTime, double eventTime, std::vector<double> eventTimeStates) const override
+            const std::vector<std::pair<double, double>> GetEvents(const std::shared_ptr<PySysLinkBase::SampleTime> sampleTime, double eventTime, std::vector<double> eventTimeStates, bool includeKnownEvents=false) const override
             {
-                return this->simulationBlockCppCommons->GetEvents(sampleTime, eventTime, eventTimeStates);
+                return this->simulationBlockCppCommons->GetEvents(sampleTime, eventTime, eventTimeStates, includeKnownEvents);
             }
 
             const std::vector<double> GetKnownEvents(const std::shared_ptr<PySysLinkBase::SampleTime> resolvedSampleTime, double simulationStartTime, double simulationEndTime) const override
