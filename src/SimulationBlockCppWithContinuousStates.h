@@ -54,7 +54,7 @@ namespace BlockTypeSupports::BasicCppSupport
 
             }
 
-            bool TryUpdateConfigurationValue(std::string keyName, PySysLinkBase::ConfigurationValue value)
+            bool _TryUpdateConfigurationValue(std::string keyName, PySysLinkBase::ConfigurationValue value)
             {
                 return this->simulationBlockCppCommons->TryUpdateConfigurationValue(keyName, value);
             }
