@@ -9,13 +9,15 @@
 
 namespace BlockTypeSupports::BasicCppSupport
 {
-    BlockFactoryCpp::BlockFactoryCpp()
+    BlockFactoryCpp::BlockFactoryCpp(std::map<std::string, PySysLinkBase::ConfigurationValue> pluginConfiguration)
     {
+        std::string libraryPluginPath = PySysLinkBase::ConfigurationValueManager::TryGetConfigurationValue<std::string>("BasicCppSupport/libraryPluginPath", pluginConfiguration);
+
         std::unique_ptr<BlockLibrariesPluginLoader<double>> blockLibrariesPluginLoaderDouble = std::make_unique<BlockLibrariesPluginLoader<double>>();
-        this->factoryRegistryDouble = blockLibrariesPluginLoaderDouble->LoadPlugins("/usr/local/lib");
+        this->factoryRegistryDouble = blockLibrariesPluginLoaderDouble->LoadPlugins(libraryPluginPath);
 
         std::unique_ptr<BlockLibrariesPluginLoader<std::complex<double>>> blockLibrariesPluginLoaderComplex = std::make_unique<BlockLibrariesPluginLoader<std::complex<double>>>();
-        this->factoryRegistryComplex = blockLibrariesPluginLoaderComplex->LoadPlugins("/usr/local/lib");
+        this->factoryRegistryComplex = blockLibrariesPluginLoaderComplex->LoadPlugins(libraryPluginPath);
     }
 
 

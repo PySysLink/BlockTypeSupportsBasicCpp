@@ -7,6 +7,8 @@ ehthumbs_vista.db
 
 .VSCodeCounter
 
+venv/
+
 # Dump file
 *.stackdump
 

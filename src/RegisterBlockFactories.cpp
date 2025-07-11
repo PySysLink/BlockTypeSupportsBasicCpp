@@ -4,9 +4,9 @@
 #include <iostream>
 #include "LoggerInstance.h"
 
-extern "C" void RegisterBlockFactories(std::map<std::string, std::shared_ptr<PySysLinkBase::IBlockFactory>>& registry) {
+extern "C" void RegisterBlockFactories(std::map<std::string, std::shared_ptr<PySysLinkBase::IBlockFactory>>& registry, std::map<std::string, PySysLinkBase::ConfigurationValue> pluginConfiguration) {
     std::cout << "Call to RegisterBlockFactories" << std::endl;
-    registry["BasicCpp"] = std::make_shared<BlockTypeSupports::BasicCppSupport::BlockFactoryCpp>();
+    registry["BasicCpp"] = std::make_shared<BlockTypeSupports::BasicCppSupport::BlockFactoryCpp>(pluginConfiguration);
     std::cout << "End of function" << std::endl;
 }
 

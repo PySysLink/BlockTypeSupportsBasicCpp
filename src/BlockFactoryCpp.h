@@ -48,7 +48,7 @@ namespace BlockTypeSupports::BasicCppSupport
             }
             
         public:
-            BlockFactoryCpp();
+            BlockFactoryCpp(std::map<std::string, PySysLinkBase::ConfigurationValue> pluginConfiguration);
             std::shared_ptr<PySysLinkBase::ISimulationBlock> CreateBlock(std::map<std::string, PySysLinkBase::ConfigurationValue> blockConfiguration, std::shared_ptr<PySysLinkBase::IBlockEventsHandler> blockEventsHandler);
     };
 } // namespace BlockTypeSupports::BasicCppSupport

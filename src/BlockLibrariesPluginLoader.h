@@ -75,20 +75,17 @@ template <typename T>
                 std::vector<std::string> sharedLibraries;
 
                 try {
-                    // Iterate over the contents of the search directory
-                    for (const auto& entry : std::filesystem::directory_iterator(searchDirectory)) {
+                    // Recursively iterate over the contents of the search directory
+                    for (const auto& entry : std::filesystem::recursive_directory_iterator(searchDirectory)) {
                         if (entry.is_regular_file()) {
-                            // Get the filename
                             const std::string filename = entry.path().filename().string();
-
-                            // Check if the filename matches the desired pattern
-                            if (filename.find("libBlockLibraries") == 0 && this->StringEndsWith(filename, "BasicCpp.so")) {
+                            if (filename.find("libBlockLibraries") == 0 && this->StringEndsWith(filename, ".so") && this->StringContains(filename, "BasicCpp")) {
                                 sharedLibraries.push_back(entry.path().string());
                             }
                         }
                     }
                 } catch (const std::filesystem::filesystem_error& e) {
-                    LoggerInstance::GetLogger()->error("Error accessing directory: ", e.what());
+                    LoggerInstance::GetLogger()->error("Error accessing directory: {}", e.what());
                 }
 
                 return sharedLibraries;
@@ -97,6 +94,10 @@ template <typename T>
             bool StringEndsWith(const std::string& str, const std::string& suffix) {
                 return str.size() >= suffix.size() &&
                     str.compare(str.size() - suffix.size(), suffix.size(), suffix) == 0;
+            }
+
+            bool StringContains(const std::string& str, const std::string& substring) {
+                return str.find(substring) != std::string::npos;
             }
     };
 

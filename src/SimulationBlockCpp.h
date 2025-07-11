@@ -36,6 +36,7 @@ namespace BlockTypeSupports::BasicCppSupport
                 this->simulationBlockCppCommons = std::make_shared<SimulationBlockCppCommons<T>>(simulationBlock, blockConfiguration, blockEventsHandler);
             }
 
+
             const std::shared_ptr<PySysLinkBase::SampleTime> GetSampleTime() const override
             {
                 return this->simulationBlockCppCommons->GetSampleTime();
