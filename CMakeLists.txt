@@ -111,3 +111,4 @@ install(TARGETS BlockTypeSupportsBasicCppSupport
 if(UNIX AND NOT APPLE) # Linux-specific
     install(CODE "execute_process(COMMAND ldconfig)")
 endif()
+

@@ -25,6 +25,9 @@ jobs:
       
           wget https://github.com/PySysLink/PySysLinkBase/releases/download/v0.1.0/PySysLinkBase-0.1.0-Linux-x86_64.deb && \
           sudo dpkg -i PySysLinkBase-0.1.0-Linux-x86_64.deb || true 
+          
+          wget https://github.com/PySysLink/BlockTypesBasicCpp/releases/download/v0.1.0/BlockTypesBasicCpp-0.1.0-Linux-x86_64.deb && \
+          sudo dpkg -i BlockTypesBasicCpp-0.1.0-Linux-x86_64.deb || true 
           sudo apt-get install -f -y 
 
 
