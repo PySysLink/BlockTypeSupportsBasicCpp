@@ -53,5 +53,5 @@ jobs:
           name: BlockTypeSupportsBasicCppSupport-artifacts
           path: |
             build/basic_cpp_support.*.pslkbtsp.yaml
-            build/*.so
+            build/src/libBlockTypeSupportsBasicCppSupport*
     
