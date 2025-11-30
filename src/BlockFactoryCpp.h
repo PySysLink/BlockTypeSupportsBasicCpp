@@ -9,6 +9,7 @@
 #include "SimulationBlockCppWithContinuousStates.h"
 #include "CppEventHandler.h"
 #include <stdexcept>
+#include <algorithm> 
 
 namespace BlockTypeSupports::BasicCppSupport
 {
