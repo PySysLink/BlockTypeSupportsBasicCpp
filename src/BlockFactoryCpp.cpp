@@ -6,6 +6,7 @@
 #include <algorithm>
 #include "CppEventHandler.h"
 #include "LoggerInstance.h"
+#include <PySysLinkBase/PortsAndSignalValues/PortTypeMetadata.h>
 
 namespace BlockTypeSupports::BasicCppSupport
 {
@@ -18,6 +19,15 @@ namespace BlockTypeSupports::BasicCppSupport
 
         std::unique_ptr<BlockLibrariesPluginLoader<std::complex<double>>> blockLibrariesPluginLoaderComplex = std::make_unique<BlockLibrariesPluginLoader<std::complex<double>>>();
         this->factoryRegistryComplex = blockLibrariesPluginLoaderComplex->LoadPlugins(libraryPluginPath);
+
+        std::unique_ptr<BlockLibrariesPluginLoader<int>> blockLibrariesPluginLoaderInt = std::make_unique<BlockLibrariesPluginLoader<int>>();
+        this->factoryRegistryInt = blockLibrariesPluginLoaderInt->LoadPlugins(libraryPluginPath);
+
+        std::unique_ptr<BlockLibrariesPluginLoader<bool>> blockLibrariesPluginLoaderBool = std::make_unique<BlockLibrariesPluginLoader<bool>>();
+        this->factoryRegistryBool = blockLibrariesPluginLoaderBool->LoadPlugins(libraryPluginPath);
+
+        std::unique_ptr<BlockLibrariesPluginLoader<std::string>> blockLibrariesPluginLoaderString = std::make_unique<BlockLibrariesPluginLoader<std::string>>();
+        this->factoryRegistryString = blockLibrariesPluginLoaderString->LoadPlugins(libraryPluginPath);
     }
 
 
@@ -25,25 +35,56 @@ namespace BlockTypeSupports::BasicCppSupport
     {
         std::string blockClass = PySysLinkBase::ConfigurationValueManager::TryGetConfigurationValue<std::string>("BlockClass", blockConfiguration);
         
-        std::string signalType = "Double";
-        try
-        {
-            signalType = PySysLinkBase::ConfigurationValueManager::TryGetConfigurationValue<std::string>("SignalType", blockConfiguration);
-        } catch(std::out_of_range) {}
+        std::string signalValueType = "double";
 
-        LoggerInstance::GetLogger()->debug("{} type block to create with signal type {}...", blockClass, signalType);
-        
-        if (signalType == "Double")
-        {
-            return this->CreateBlockFromRegistry<double>(this->factoryRegistryDouble, blockClass, blockConfiguration, blockEventsHandler);
-        }
-        else if (signalType == "Complex")
-        {
-            return this->CreateBlockFromRegistry<std::complex<double>>(this->factoryRegistryComplex, blockClass, blockConfiguration, blockEventsHandler);
+        int inputPortNumber = PySysLinkBase::ConfigurationValueManager::TryGetConfigurationValue<int>("InputPortNumber", blockConfiguration);
+
+        if (inputPortNumber > 0) {
+            std::vector<PySysLinkBase::PortTypeMetadata> inputPortTypeMetadataVector = PySysLinkBase::ConfigurationValueManager::TryGetConfigurationValue<std::vector<PySysLinkBase::PortTypeMetadata>>("InputPortTypeMetadata", blockConfiguration);
+            if (!inputPortTypeMetadataVector.empty()) {
+                if (inputPortTypeMetadataVector[0].signalValueType.has_value()) {
+                    signalValueType = inputPortTypeMetadataVector[0].signalValueType.value();
+                }
+            }
         }
         else
         {
-            throw std::invalid_argument("SignalType: " + signalType + " is not supported for block type BasicCpp");
+            int outputPortNumber = PySysLinkBase::ConfigurationValueManager::TryGetConfigurationValue<int>("OutputPortNumber", blockConfiguration);
+            if (outputPortNumber > 0) {
+                std::vector<PySysLinkBase::PortTypeMetadata> outputPortTypeMetadataVector = PySysLinkBase::ConfigurationValueManager::TryGetConfigurationValue<std::vector<PySysLinkBase::PortTypeMetadata>>("OutputPortTypeMetadata", blockConfiguration);
+                if (!outputPortTypeMetadataVector.empty()) {
+                    if (outputPortTypeMetadataVector[0].signalValueType.has_value()) {
+                        signalValueType = outputPortTypeMetadataVector[0].signalValueType.value();
+                    }
+                }
+            }
+        }
+
+        LoggerInstance::GetLogger()->debug("{} type block to create with signal type {}...", blockClass, signalValueType);
+        
+        if (signalValueType == "double")
+        {
+            return this->CreateBlockFromRegistry<double>(this->factoryRegistryDouble, blockClass, blockConfiguration, blockEventsHandler);
+        }
+        else if (signalValueType == "complex_double")
+        {
+            return this->CreateBlockFromRegistry<std::complex<double>>(this->factoryRegistryComplex, blockClass, blockConfiguration, blockEventsHandler);
+        }
+        else if (signalValueType == "int")
+        {
+            return this->CreateBlockFromRegistry<int>(this->factoryRegistryInt, blockClass, blockConfiguration, blockEventsHandler);
+        }
+        else if (signalValueType == "bool")
+        {
+            return this->CreateBlockFromRegistry<bool>(this->factoryRegistryBool, blockClass, blockConfiguration, blockEventsHandler);
+        }
+        else if (signalValueType == "string")
+        {
+            return this->CreateBlockFromRegistry<std::string>(this->factoryRegistryString, blockClass, blockConfiguration, blockEventsHandler);
+        }
+        else
+        {
+            throw std::invalid_argument("signalValueType: " + signalValueType + " is not supported for block type BasicCpp");
         }
     }
 
