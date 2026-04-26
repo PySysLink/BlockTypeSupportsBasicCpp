@@ -3,7 +3,6 @@ add_library(BlockTypeSupportsBasicCppSupport SHARED RegisterBlockFactories.cpp
             SampleTimeConversion.cpp
             BlockFactoryCpp.cpp
             RegisterBlockFactories.cpp
-            CppEventHandler.cpp
             LoggerInstance.cpp)
 
 include(FetchContent)
@@ -26,12 +25,10 @@ set(YAML_CPP_STATIC_LIBS TRUE)
 find_package(yaml-cpp REQUIRED)
 
 target_link_libraries(BlockTypeSupportsBasicCppSupport PRIVATE PySysLinkBase::PySysLinkBase)
-target_link_libraries(BlockTypeSupportsBasicCppSupport PRIVATE BlockTypes::BasicCpp::BlockTypesBasicCpp)
 target_link_libraries(BlockTypeSupportsBasicCppSupport PRIVATE yaml-cpp)
 
 # Include directories for header files
 target_include_directories(BlockTypeSupportsBasicCppSupport PUBLIC ${PySysLinkBase_INCLUDE_DIRS})
-target_include_directories(BlockTypeSupportsBasicCppSupport PUBLIC ${BlockTypesBasicCpp_INCLUDE_DIRS})
 
 
 set_target_properties(BlockTypeSupportsBasicCppSupport PROPERTIES 

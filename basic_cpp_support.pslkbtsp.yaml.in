@@ -3,7 +3,5 @@ pluginType: blockTypeSupport
 blockType: BasicCpp
 version: @PROJECT_VERSION@
 dependsOn:
-  - name: BlockTypesBasicCpp
-    version: @BLOCK_TYPES_BASIC_CPP_VERSION@
   - name: PySysLinkBase
     version: @PYSYSLINK_BASE_VERSION@

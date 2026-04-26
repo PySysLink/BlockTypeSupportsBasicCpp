@@ -35,7 +35,6 @@ message(STATUS "Default install path: ${CMAKE_INSTALL_PREFIX}")
 
 # Locate PySysLinkBase
 find_package(PySysLinkBase ${PYSYSLINK_BASE_VERSION} REQUIRED)
-find_package(BlockTypesBasicCpp ${BLOCK_TYPES_BASIC_CPP_VERSION} REQUIRED)
 
 # Add subdirectories
 add_subdirectory(src)

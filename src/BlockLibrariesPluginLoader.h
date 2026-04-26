@@ -12,32 +12,15 @@
 #include <complex>
 #include <iostream>
 
-#include <BlockTypes/BasicCpp/IBasicCppBlockFactory.h>
+#include "IBasicCppBlockFactory.h"
 
 namespace BlockTypeSupports::BasicCppSupport {
 
-template <typename T>
     class BlockLibrariesPluginLoader {
         public:
-            std::map<std::string, std::unique_ptr<BlockTypes::BasicCpp::IBasicCppBlockFactory<T>>> LoadPlugins(const std::string& pluginDirectory) 
-            {
-                std::string typeNameExtender;
-                if (std::is_same<T, double>::value) 
-                {
-                    typeNameExtender = "Double";
-                }
-                else if (std::is_same<T, std::complex<double>>::value) 
-                {
-                    typeNameExtender = "Complex";
-                }
-                else
-                {
-                    throw std::invalid_argument("Template type used does not seem to be supported, unable to get typeNameExtender");
-                }
-                
-                std::cout << "typeNameExtender: " << typeNameExtender << std::endl;
-
-                std::map<std::string, std::unique_ptr<BlockTypes::BasicCpp::IBasicCppBlockFactory<T>>> factoryRegistry;
+            std::map<std::string, std::unique_ptr<IBasicCppBlockFactory>> LoadPlugins(const std::string& pluginDirectory) 
+            {                
+                std::map<std::string, std::unique_ptr<IBasicCppBlockFactory>> factoryRegistry;
                 
                 for (const auto& pluginPath : this->FindSharedLibraries(pluginDirectory)) {
                     std::cout << "Plugin to load: " << pluginPath << std::endl;
@@ -52,7 +35,7 @@ template <typename T>
                     LoggerInstance::GetLogger()->debug("Handle obtained for plugin: {}", pluginPath);
                     std::cout << "Handle obtained for plugin: " << pluginPath << std::endl;
 
-                    auto registerFunc = reinterpret_cast<void(*)(std::map<std::string, std::unique_ptr<BlockTypes::BasicCpp::IBasicCppBlockFactory<T>>>&)>(dlsym(handle, ("RegisterBasicCppFactories" + typeNameExtender).c_str()));
+                    auto registerFunc = reinterpret_cast<void(*)(std::map<std::string, std::unique_ptr<IBasicCppBlockFactory>>&)>(dlsym(handle, "RegisterBasicCppFactories"));
                     LoggerInstance::GetLogger()->debug("registerFunc get from plugin: {}", pluginPath);
                     std::cout << "registerFunc get from plugin: " << pluginPath << std::endl;
 
@@ -64,7 +47,7 @@ template <typename T>
                     }
                     std::cout << "Block library plugin loaded: " << pluginPath << std::endl;
 
-                    LoggerInstance::GetLogger()->debug("Block library plugin loaded: {} with type: {}", pluginPath, typeNameExtender);
+                    LoggerInstance::GetLogger()->debug("Block library plugin loaded: {}", pluginPath);
                     registerFunc(factoryRegistry);
                 }
                 return factoryRegistry;

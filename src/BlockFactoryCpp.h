@@ -7,7 +7,7 @@
 #include <BlockTypes/BasicCpp/SimulationBlockWithContinuousStates.h>
 #include "SimulationBlockCpp.h"
 #include "SimulationBlockCppWithContinuousStates.h"
-#include "CppEventHandler.h"
+#include "IBasicCppBlockFactory.h"
 #include <stdexcept>
 #include <algorithm> 
 
@@ -16,14 +16,9 @@ namespace BlockTypeSupports::BasicCppSupport
     class BlockFactoryCpp : public PySysLinkBase::IBlockFactory
     {
         private:
-            std::map<std::string, std::unique_ptr<BlockTypes::BasicCpp::IBasicCppBlockFactory<double>>> factoryRegistryDouble;
-            std::map<std::string, std::unique_ptr<BlockTypes::BasicCpp::IBasicCppBlockFactory<std::complex<double>>>> factoryRegistryComplex;
-            std::map<std::string, std::unique_ptr<BlockTypes::BasicCpp::IBasicCppBlockFactory<int>>> factoryRegistryInt;
-            std::map<std::string, std::unique_ptr<BlockTypes::BasicCpp::IBasicCppBlockFactory<bool>>> factoryRegistryBool;
-            std::map<std::string, std::unique_ptr<BlockTypes::BasicCpp::IBasicCppBlockFactory<std::string>>> factoryRegistryString;
+            std::map<std::string, std::unique_ptr<IBasicCppBlockFactory>> factoryRegistry;
 
-            template <typename T>
-            std::shared_ptr<PySysLinkBase::ISimulationBlock> CreateBlockFromRegistry(std::map<std::string, std::unique_ptr<BlockTypes::BasicCpp::IBasicCppBlockFactory<T>>>& registry, std::string blockClass, std::map<std::string, 
+            std::shared_ptr<PySysLinkBase::ISimulationBlock> CreateBlockFromRegistry(std::map<std::string, std::unique_ptr<IBasicCppBlockFactory>>& registry, std::string blockClass, std::map<std::string, 
                                                                             PySysLinkBase::ConfigurationValue> blockConfiguration, std::shared_ptr<PySysLinkBase::IBlockEventsHandler> blockEventsHandler)
             {
                 for (auto const& [key, val] : registry)
@@ -33,18 +28,7 @@ namespace BlockTypeSupports::BasicCppSupport
                     int cnt = std::count(supportedBlockClasses.begin(), supportedBlockClasses.end(), blockClass);
                     if (cnt > 0)
                     {
-                        std::shared_ptr<CppEventHandler> cppEventHandler = std::make_shared<CppEventHandler>(blockEventsHandler);
-                        std::shared_ptr<BlockTypes::BasicCpp::SimulationBlock<T>> simulationBlock = val->CreateBlock(blockClass, blockConfiguration, cppEventHandler);
-
-                        std::shared_ptr<BlockTypes::BasicCpp::SimulationBlockWithContinuousStates<T>> blockWithContinuousStates = std::dynamic_pointer_cast<BlockTypes::BasicCpp::SimulationBlockWithContinuousStates<T>>(simulationBlock);
-                        if (blockWithContinuousStates)
-                        {
-                            return std::make_shared<SimulationBlockCppWithContinuousStates<T>>(std::move(blockWithContinuousStates), blockConfiguration, blockEventsHandler);
-                        }
-                        else
-                        {
-                            return std::make_shared<SimulationBlockCpp<T>>(std::move(simulationBlock), blockConfiguration, blockEventsHandler);
-                        }
+                        return val->CreateBlock(blockClass, blockConfiguration, blockEventsHandler);
                     }
                 }
 

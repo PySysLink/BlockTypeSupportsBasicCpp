@@ -2,7 +2,6 @@
 
 include(CMakeFindDependencyMacro)
 find_dependency(PySysLinkBase REQUIRED)
-find_dependency(BlockTypesBasicCpp REQUIRED)
 
 # Specify the include directories and libraries
 set_and_check(BLOCK_TYPE_SUPPORTS_BASIC_CPP_SUPPORT_INCLUDE_DIRS "@PACKAGE_INCLUDE_DIRS@")
