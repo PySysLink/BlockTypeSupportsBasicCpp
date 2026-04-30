@@ -3,8 +3,6 @@
 
 #include <PySysLinkBase/IBlockFactory.h>
 #include <PySysLinkBase/IBlockEventsHandler.h>
-#include <BlockTypes/BasicCpp/IBasicCppBlockFactory.h>
-#include <BlockTypes/BasicCpp/SimulationBlockWithContinuousStates.h>
 #include "SimulationBlockCpp.h"
 #include "SimulationBlockCppWithContinuousStates.h"
 #include "IBasicCppBlockFactory.h"
