@@ -13,7 +13,8 @@ namespace BlockTypeSupports::BasicCppSupport
             std::vector<std::shared_ptr<PySysLinkBase::InputPort>> inputPorts;
             std::vector<std::shared_ptr<PySysLinkBase::OutputPort>> outputPorts;
         
-            
+            std::shared_ptr<PySysLinkBase::SampleTime> sampleTime;
+
             std::vector<T> GetInputValues() const
             {
                 std::vector<T> inputValues = {};
@@ -73,8 +74,8 @@ namespace BlockTypeSupports::BasicCppSupport
             const virtual int GetOutputPortAmount() const = 0;
 
 
-            const virtual std::shared_ptr<PySysLinkBase::SampleTime> GetSampleTime() const = 0;
-            virtual void SetSampleTime(std::shared_ptr<PySysLinkBase::SampleTime> sampleTime) = 0;
+            const virtual std::shared_ptr<PySysLinkBase::SampleTime> GetSampleTime() const { return this->sampleTime; }
+            virtual void SetSampleTime(std::shared_ptr<PySysLinkBase::SampleTime> sampleTime) { this->sampleTime = sampleTime; }
 
 
             std::vector<std::shared_ptr<PySysLinkBase::InputPort>> GetInputPorts() const
