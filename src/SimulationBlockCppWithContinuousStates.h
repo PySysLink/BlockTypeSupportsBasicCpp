@@ -114,14 +114,11 @@ namespace BlockTypeSupports::BasicCppSupport
             }
             
 
-            const std::vector<double> GetContinuousStates() const
-            {
-                return this->GetContinuousStates();
-            }
-            void SetContinuousStates(std::vector<double> newStates)
-            {
-                this->SetContinuousStates(newStates);
-            }
+            virtual const std::vector<double> GetContinuousStates() const = 0;
+            
+
+            virtual void SetContinuousStates(std::vector<double> newStates) = 0;
+
 
             const std::vector<double> GetContinuousStateDerivatives(const std::shared_ptr<PySysLinkBase::SampleTime> sampleTime, double currentTime) const
             {

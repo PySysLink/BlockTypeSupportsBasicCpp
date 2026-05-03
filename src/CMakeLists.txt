@@ -1,7 +1,8 @@
 # Define the shared library
 add_library(BlockTypeSupportsBasicCppSupport SHARED RegisterBlockFactories.cpp
             BlockFactoryCpp.cpp
-            LoggerInstance.cpp)
+            LoggerInstance.cpp
+            )
 
 include(FetchContent)
 
