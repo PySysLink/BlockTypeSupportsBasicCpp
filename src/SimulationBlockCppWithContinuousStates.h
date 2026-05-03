@@ -18,7 +18,7 @@ namespace BlockTypeSupports::BasicCppSupport
             std::vector<T> GetInputValues() const
             {
                 std::vector<T> inputValues = {};
-                for (int i = 0; i < this->GetInputPortAmount(); i++)
+                for (int i = 0; i < this->inputPorts.size(); i++)
                 {
                     auto inputValue = this->inputPorts[i]->GetValue();
                     auto inputValueSignal = inputValue->TryCastToTyped<T>();
@@ -30,7 +30,7 @@ namespace BlockTypeSupports::BasicCppSupport
 
             void SetOutputValues(std::vector<T> outputValues)
             {
-                for (int i = 0; i < this->GetOutputPortAmount(); i++)
+                for (int i = 0; i < this->outputPorts.size(); i++)
                 {
                     std::shared_ptr<PySysLinkBase::UnknownTypeSignalValue> outputValue = this->outputPorts[i]->GetValue();
                     auto outputValueSignal = outputValue->TryCastToTyped<T>();
@@ -42,22 +42,22 @@ namespace BlockTypeSupports::BasicCppSupport
         public:
 
             SimulationBlockCppWithContinuousStates(std::map<std::string, PySysLinkBase::ConfigurationValue> blockConfiguration, 
-                                                    std::shared_ptr<PySysLinkBase::IBlockEventsHandler> blockEventsHandler) 
+                                                    std::shared_ptr<PySysLinkBase::IBlockEventsHandler> blockEventsHandler,
+                                                    int inputPortAmount, int outputPortAmount, const std::vector<bool>& inputsHasDirectFeedthrough) 
                         : PySysLinkBase::ISimulationBlockWithContinuousStates(blockConfiguration, blockEventsHandler)
             {
                 LoggerInstance::GetLogger()->debug("Creating basic simulation block cpp with continuous states...");
 
-                std::vector<bool> inputsHasDirectFeedthrough = this->InputsHasDirectFeedthrough();
-                if (inputsHasDirectFeedthrough.size() != this->GetInputPortAmount()) {
+                if (inputsHasDirectFeedthrough.size() != inputPortAmount) {
                     throw std::runtime_error("Mismatch between the number of input ports and the size of the inputsHasDirectFeedthrough vector");
                 }
-                for (int i = 0; i < this->GetInputPortAmount(); i++)
+                for (int i = 0; i < inputPortAmount; i++)
                 {
                     std::shared_ptr<PySysLinkBase::UnknownTypeSignalValue> signalValue = std::make_shared<PySysLinkBase::SignalValue<T>>(PySysLinkBase::SignalValue<T>(0.0));
                     auto inputPort = std::make_shared<PySysLinkBase::InputPort>(PySysLinkBase::InputPort(inputsHasDirectFeedthrough[i], signalValue));
                     this->inputPorts.push_back(inputPort);
                 }
-                for (int i = 0; i < this->GetOutputPortAmount(); i++)
+                for (int i = 0; i < outputPortAmount; i++)
                 {
                     std::shared_ptr<PySysLinkBase::UnknownTypeSignalValue> signalValue = std::make_shared<PySysLinkBase::SignalValue<T>>(PySysLinkBase::SignalValue<T>(0.0));
                     auto outputPort = std::make_shared<PySysLinkBase::OutputPort>(PySysLinkBase::OutputPort(signalValue));
@@ -67,11 +67,6 @@ namespace BlockTypeSupports::BasicCppSupport
                 LoggerInstance::GetLogger()->debug("Ports configured...");               
                 LoggerInstance::GetLogger()->debug("Basic simulation block cpp created");
             }
- 
-
-            const virtual std::vector<bool> InputsHasDirectFeedthrough() const = 0;
-            const virtual int GetInputPortAmount() const = 0;
-            const virtual int GetOutputPortAmount() const = 0;
 
 
             const virtual std::shared_ptr<PySysLinkBase::SampleTime> GetSampleTime() const { return this->sampleTime; }
