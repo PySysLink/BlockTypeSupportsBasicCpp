@@ -22,10 +22,12 @@ namespace BlockTypeSupports::BasicCppSupport
     {
         std::string blockClass = PySysLinkBase::ConfigurationValueManager::TryGetConfigurationValue<std::string>("BlockClass", blockConfiguration);
         
+        int inputPortNumber = PySysLinkBase::ConfigurationValueManager::TryGetConfigurationValue<int>("InputPortNumber", blockConfiguration);
+        int outputPortNumber = PySysLinkBase::ConfigurationValueManager::TryGetConfigurationValue<int>("OutputPortNumber", blockConfiguration);
 
         LoggerInstance::GetLogger()->debug("{} type block to create...", blockClass);
         
-        return this->CreateBlockFromRegistry(this->factoryRegistry, blockClass, blockConfiguration, blockEventsHandler);
+        return this->CreateBlockFromRegistry(this->factoryRegistry, blockClass, blockConfiguration, blockEventsHandler, inputPortNumber, outputPortNumber);
     }
 
 } // namespace BlockTypeSupports::BasicCppSupport

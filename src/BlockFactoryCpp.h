@@ -17,7 +17,8 @@ namespace BlockTypeSupports::BasicCppSupport
             std::map<std::string, std::unique_ptr<IBasicCppBlockFactory>> factoryRegistry;
 
             std::shared_ptr<PySysLinkBase::ISimulationBlock> CreateBlockFromRegistry(std::map<std::string, std::unique_ptr<IBasicCppBlockFactory>>& registry, std::string blockClass, std::map<std::string, 
-                                                                            PySysLinkBase::ConfigurationValue> blockConfiguration, std::shared_ptr<PySysLinkBase::IBlockEventsHandler> blockEventsHandler)
+                                                                            PySysLinkBase::ConfigurationValue> blockConfiguration, std::shared_ptr<PySysLinkBase::IBlockEventsHandler> blockEventsHandler,
+                                                                            int inputPortNumber, int outputPortNumber)
             {
                 for (auto const& [key, val] : registry)
                 {
@@ -26,7 +27,7 @@ namespace BlockTypeSupports::BasicCppSupport
                     int cnt = std::count(supportedBlockClasses.begin(), supportedBlockClasses.end(), blockClass);
                     if (cnt > 0)
                     {
-                        return val->CreateBlock(blockClass, blockConfiguration, blockEventsHandler);
+                        return val->CreateBlock(blockClass, blockConfiguration, blockEventsHandler, inputPortNumber, outputPortNumber);
                     }
                 }
 

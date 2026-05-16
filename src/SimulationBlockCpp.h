@@ -52,21 +52,20 @@ namespace BlockTypeSupports::BasicCppSupport
         public:
             SimulationBlockCpp(std::map<std::string, PySysLinkBase::ConfigurationValue> blockConfiguration, 
                                 std::shared_ptr<PySysLinkBase::IBlockEventsHandler> blockEventsHandler,
-                                int inputPortAmount, int outputPortAmount, const std::vector<bool>& inputsHasDirectFeedthrough) 
+                                int inputPortNumber, int outputPortNumber, bool inputsHasDirectFeedthrough) 
                                 : ISimulationBlock(blockConfiguration, blockEventsHandler) 
             {
                 LoggerInstance::GetLogger()->debug("Creating basic simulation block cpp...");
+                LoggerInstance::GetLogger()->debug("Input ports: {}, Output ports: {}", inputPortNumber, outputPortNumber);
 
-                if (inputsHasDirectFeedthrough.size() != inputPortAmount) {
-                    throw std::runtime_error("Mismatch between the number of input ports and the size of the inputsHasDirectFeedthrough vector");
-                }
-                for (int i = 0; i < inputPortAmount; i++)
+           
+                for (int i = 0; i < inputPortNumber; i++)
                 {
                     std::shared_ptr<PySysLinkBase::UnknownTypeSignalValue> signalValue = std::make_shared<PySysLinkBase::SignalValue<T>>(PySysLinkBase::SignalValue<T>(0.0));
-                    auto inputPort = std::make_shared<PySysLinkBase::InputPort>(PySysLinkBase::InputPort(inputsHasDirectFeedthrough[i], signalValue));
+                    auto inputPort = std::make_shared<PySysLinkBase::InputPort>(PySysLinkBase::InputPort(inputsHasDirectFeedthrough, signalValue));
                     this->inputPorts.push_back(inputPort);
                 }
-                for (int i = 0; i < outputPortAmount; i++)
+                for (int i = 0; i < outputPortNumber; i++)
                 {
                     std::shared_ptr<PySysLinkBase::UnknownTypeSignalValue> signalValue = std::make_shared<PySysLinkBase::SignalValue<T>>(PySysLinkBase::SignalValue<T>(0.0));
                     auto outputPort = std::make_shared<PySysLinkBase::OutputPort>(PySysLinkBase::OutputPort(signalValue));
