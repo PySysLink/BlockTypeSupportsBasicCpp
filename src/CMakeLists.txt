@@ -26,6 +26,13 @@ find_package(yaml-cpp REQUIRED)
 target_link_libraries(BlockTypeSupportsBasicCppSupport PRIVATE PySysLinkBase::PySysLinkBase)
 target_link_libraries(BlockTypeSupportsBasicCppSupport PRIVATE yaml-cpp)
 
+# -------------------------------------------------------------------
+# Eigen3 (system)
+# -------------------------------------------------------------------
+find_package(Eigen3 REQUIRED NO_MODULE)
+target_link_libraries(BlockTypeSupportsBasicCppSupport PRIVATE Eigen3::Eigen)
+
+
 # Include directories for header files
 target_include_directories(BlockTypeSupportsBasicCppSupport PUBLIC ${PySysLinkBase_INCLUDE_DIRS})
 
