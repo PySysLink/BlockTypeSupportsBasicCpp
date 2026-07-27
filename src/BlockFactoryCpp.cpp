@@ -9,6 +9,12 @@
 
 namespace BlockTypeSupports::BasicCppSupport
 {
+    struct ResolvedSignalTypes
+    {
+        std::string inputType;
+        std::string outputType;
+    };
+
     BlockFactoryCpp::BlockFactoryCpp(std::map<std::string, PySysLinkBase::ConfigurationValue> pluginConfiguration)
     {
         std::string libraryPluginPath = PySysLinkBase::ConfigurationValueManager::TryGetConfigurationValue<std::string>("BasicCppSupport/libraryPluginPath", pluginConfiguration);
@@ -18,30 +24,51 @@ namespace BlockTypeSupports::BasicCppSupport
     }
 
     std::string ResolveSignalType(
-            const std::vector<PySysLinkBase::PortTypeMetadata>& inputs,
-            const std::vector<PySysLinkBase::PortTypeMetadata>& outputs)
+        const std::vector<PySysLinkBase::PortTypeMetadata>& ports,
+        const std::string& description)
     {
-            
-            for (const auto& p : inputs)
-            {
-                if (p.category == PySysLinkBase::PortCategory::FullySupportedSignalValue &&
+        for (const auto& p : ports)
+        {
+            if (p.category == PySysLinkBase::PortCategory::FullySupportedSignalValue &&
                 p.signalValueType.has_value())
-                {
-                        std::cout << "Resolved signal type from input port: " << p.signalValueType.value() << std::endl;
-                        return p.signalValueType.value();
-                }
-            }
-            for (const auto& p : outputs)
             {
-                if (p.category == PySysLinkBase::PortCategory::FullySupportedSignalValue &&
-                p.signalValueType.has_value())
-                {
-                        std::cout << "Resolved signal type from output port: " << p.signalValueType.value() << std::endl;
-                        return p.signalValueType.value();
-                }
+                return *p.signalValueType;
             }
+        }
 
-            throw std::invalid_argument("Could not resolve signal type from ports.");
+        throw std::invalid_argument(
+            "Could not resolve " + description + " signal type.");
+    }
+
+    ResolvedSignalTypes ResolveSignalTypes(
+        const std::vector<PySysLinkBase::PortTypeMetadata>& inputs,
+        const std::vector<PySysLinkBase::PortTypeMetadata>& outputs)
+    {
+        const bool hasInputs = !inputs.empty();
+        const bool hasOutputs = !outputs.empty();
+
+        if (hasInputs && hasOutputs)
+        {
+            return {
+                ResolveSignalType(inputs, "input"),
+                ResolveSignalType(outputs, "output")
+            };
+        }
+
+        if (hasInputs)
+        {
+            std::string type = ResolveSignalType(inputs, "input");
+            return {type, type};
+        }
+
+        if (hasOutputs)
+        {
+            std::string type = ResolveSignalType(outputs, "output");
+            return {type, type};
+        }
+
+        throw std::invalid_argument(
+            "Cannot resolve signal types: block has neither input nor output ports.");
     }
 
     std::string PortCategoryToString(PySysLinkBase::PortCategory cat)
@@ -105,22 +132,22 @@ namespace BlockTypeSupports::BasicCppSupport
         PySysLinkBase::ConfigurationValueManager::TryGetConfigurationValue<std::vector<std::string>>(
             "OutputPortTypes", blockConfiguration));
         
-        std::string dataType;
+        ResolvedSignalTypes signalTypes;
         try {
-            dataType = ResolveSignalType(inputTypes, outputTypes);
+            signalTypes = ResolveSignalTypes(inputTypes, outputTypes);
         }
         catch (const std::invalid_argument&)
         {
             throw std::invalid_argument(
-                    "Could not resolve signal type for block '" + blockClass +
+                    "Could not resolve signal types for block '" + blockClass +
                     "'\n  InputPortTypes: " + JoinPortTypes(inputTypes) +
                     "\n  OutputPortTypes: " + JoinPortTypes(outputTypes)
             );
         }
 
-        LoggerInstance::GetLogger()->debug("{} class block to create with type {}", blockClass, dataType);
+        LoggerInstance::GetLogger()->debug("{} class block to create with input type {}, output type {}", blockClass, signalTypes.inputType, signalTypes.outputType);
         
-        return this->CreateBlockFromRegistry(this->factoryRegistry, blockClass, blockConfiguration, blockEventsHandler, dataType, inputPortNumber, outputPortNumber);
+        return this->CreateBlockFromRegistry(this->factoryRegistry, blockClass, blockConfiguration, blockEventsHandler, signalTypes.inputType, signalTypes.outputType, inputPortNumber, outputPortNumber);
     }  
 
 } // namespace BlockTypeSupports::BasicCppSupport

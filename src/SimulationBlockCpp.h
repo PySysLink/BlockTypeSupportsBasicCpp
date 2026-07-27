@@ -17,7 +17,7 @@
 
 namespace BlockTypeSupports::BasicCppSupport
 {
-    template <typename T>
+    template <typename I, typename O = I>
     class SimulationBlockCpp : public PySysLinkBase::ISimulationBlock {
         protected:
             std::vector<std::shared_ptr<PySysLinkBase::InputPort>> inputPorts;
@@ -25,27 +25,27 @@ namespace BlockTypeSupports::BasicCppSupport
 
             std::shared_ptr<PySysLinkBase::SampleTime> sampleTime;
             
-            std::vector<T> GetInputValues() const
+            std::vector<I> GetInputValues() const
             {
-                std::vector<T> inputValues = {};
+                std::vector<I> inputValues = {};
                 for (int i = 0; i < this->inputPorts.size(); i++)
                 {
                     auto inputValue = this->inputPorts[i]->GetValue();
-                    auto inputValueSignal = inputValue->TryCastToTyped<T>();
+                    auto inputValueSignal = inputValue->TryCastToTyped<I>();
                     inputValues.push_back(inputValueSignal->GetPayload());
                 }
 
                 return inputValues;
             }
 
-            void SetOutputValues(std::vector<T> outputValues)
+            void SetOutputValues(std::vector<O> outputValues)
             {
                 for (int i = 0; i < this->outputPorts.size(); i++)
                 {
                     std::shared_ptr<PySysLinkBase::UnknownTypeSignalValue> outputValue = this->outputPorts[i]->GetValue();
-                    auto outputValueSignal = outputValue->TryCastToTyped<T>();
+                    auto outputValueSignal = outputValue->TryCastToTyped<O>();
                     outputValueSignal->SetPayload(outputValues[i]);
-                    this->outputPorts[i]->SetValue(std::make_shared<PySysLinkBase::SignalValue<T>>(*outputValueSignal));
+                    this->outputPorts[i]->SetValue(std::make_shared<PySysLinkBase::SignalValue<O>>(*outputValueSignal));
                 }
             }
             
@@ -61,13 +61,13 @@ namespace BlockTypeSupports::BasicCppSupport
            
                 for (int i = 0; i < inputPortNumber; i++)
                 {
-                    std::shared_ptr<PySysLinkBase::UnknownTypeSignalValue> signalValue = std::make_shared<PySysLinkBase::SignalValue<T>>(PySysLinkBase::SignalValue<T>(T{}));
+                    std::shared_ptr<PySysLinkBase::UnknownTypeSignalValue> signalValue = std::make_shared<PySysLinkBase::SignalValue<I>>(PySysLinkBase::SignalValue<I>(I{}));
                     auto inputPort = std::make_shared<PySysLinkBase::InputPort>(PySysLinkBase::InputPort(inputsHasDirectFeedthrough, signalValue));
                     this->inputPorts.push_back(inputPort);
                 }
                 for (int i = 0; i < outputPortNumber; i++)
                 {
-                    std::shared_ptr<PySysLinkBase::UnknownTypeSignalValue> signalValue = std::make_shared<PySysLinkBase::SignalValue<T>>(PySysLinkBase::SignalValue<T>(T{}));
+                    std::shared_ptr<PySysLinkBase::UnknownTypeSignalValue> signalValue = std::make_shared<PySysLinkBase::SignalValue<O>>(PySysLinkBase::SignalValue<O>(O{}));
                     auto outputPort = std::make_shared<PySysLinkBase::OutputPort>(PySysLinkBase::OutputPort(signalValue));
                     this->outputPorts.push_back(outputPort);
                 }
@@ -92,20 +92,20 @@ namespace BlockTypeSupports::BasicCppSupport
 
             const std::vector<std::shared_ptr<PySysLinkBase::OutputPort>> _ComputeOutputsOfBlock(const std::shared_ptr<PySysLinkBase::SampleTime> sampleTime, double currentTime, bool isMinorStep=false)
             {
-                std::vector<T> inputValues = this->GetInputValues();
+                std::vector<I> inputValues = this->GetInputValues();
 
-                std::vector<T> outputValues = this->ComputeOutputsOfCppBlock(inputValues, sampleTime, currentTime, isMinorStep);
+                std::vector<O> outputValues = this->ComputeOutputsOfCppBlock(inputValues, sampleTime, currentTime, isMinorStep);
                 this->SetOutputValues(outputValues);
                 
                 return this->GetOutputPorts();
             }
 
-            virtual std::vector<T> ComputeOutputsOfCppBlock(const std::vector<T> inputs, const std::shared_ptr<PySysLinkBase::SampleTime> sampleTime, double currentTime, bool isMinorStep=false) = 0;
+            virtual std::vector<O> ComputeOutputsOfCppBlock(const std::vector<I> inputs, const std::shared_ptr<PySysLinkBase::SampleTime> sampleTime, double currentTime, bool isMinorStep=false) = 0;
 
 
             virtual bool _TryUpdateConfigurationValue(std::string keyName, PySysLinkBase::ConfigurationValue value) {return false;}
 
-            virtual const std::vector<std::pair<double, double>> GetEvents(const std::vector<T> inputs, const std::shared_ptr<PySysLinkBase::SampleTime> sampleTime, double eventTime, std::vector<double> eventTimeStates, bool includeKnownEvents=false) const
+            virtual const std::vector<std::pair<double, double>> GetEvents(const std::vector<I> inputs, const std::shared_ptr<PySysLinkBase::SampleTime> sampleTime, double eventTime, std::vector<double> eventTimeStates, bool includeKnownEvents=false) const
             {
                 return {};
             }
