@@ -8,14 +8,8 @@ include(FetchContent)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-
-FetchContent_Declare(
-        spdlog
-        GIT_REPOSITORY https://github.com/gabime/spdlog.git
-        GIT_TAG        v1.15.0
-)
-
-FetchContent_MakeAvailable(spdlog)
+find_package(spdlog REQUIRED)
+find_package(fmt REQUIRED)
 
 add_dependencies(BlockTypeSupportsBasicCppSupport spdlog::spdlog)
 target_link_libraries(BlockTypeSupportsBasicCppSupport PRIVATE spdlog::spdlog)
