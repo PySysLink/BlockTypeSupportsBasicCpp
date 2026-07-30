@@ -9,23 +9,33 @@ include(FetchContent)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 find_package(spdlog REQUIRED)
-find_package(fmt REQUIRED)
-
-add_dependencies(BlockTypeSupportsBasicCppSupport spdlog::spdlog)
-target_link_libraries(BlockTypeSupportsBasicCppSupport PRIVATE spdlog::spdlog)
-
-set(YAML_CPP_STATIC_LIBS TRUE)
 find_package(yaml-cpp REQUIRED)
 
-target_link_libraries(BlockTypeSupportsBasicCppSupport PRIVATE PySysLinkBase::PySysLinkBase)
-target_link_libraries(BlockTypeSupportsBasicCppSupport PRIVATE yaml-cpp)
+add_library(yaml-cpp-static STATIC IMPORTED)
+
+set_target_properties(yaml-cpp-static PROPERTIES
+    IMPORTED_LOCATION "/usr/lib64/libyaml-cpp.a"
+    INTERFACE_INCLUDE_DIRECTORIES "/usr/include"
+)
+
+find_package(fmt REQUIRED)
+find_package(spdlog REQUIRED)
+
 
 # -------------------------------------------------------------------
 # Eigen3 (system)
 # -------------------------------------------------------------------
 find_package(Eigen3 REQUIRED NO_MODULE)
-target_link_libraries(BlockTypeSupportsBasicCppSupport PRIVATE Eigen3::Eigen)
 
+
+target_link_libraries(BlockTypeSupportsBasicCppSupport
+    PRIVATE
+        PySysLinkBase::PySysLinkBase
+        yaml-cpp-static
+        spdlog::spdlog_header_only
+        fmt::fmt
+        Eigen3::Eigen
+)
 
 # Include directories for header files
 target_include_directories(BlockTypeSupportsBasicCppSupport PUBLIC ${PySysLinkBase_INCLUDE_DIRS})
@@ -43,4 +53,9 @@ target_include_directories(BlockTypeSupportsBasicCppSupport
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>  # Include path for the build tree
         $<INSTALL_INTERFACE:include>                   # Include path for the installed tree
+)
+
+target_link_options(BlockTypeSupportsBasicCppSupport PRIVATE
+    -static-libstdc++
+    -static-libgcc
 )
