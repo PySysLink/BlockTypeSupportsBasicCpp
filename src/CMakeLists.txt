@@ -19,7 +19,6 @@ set_target_properties(yaml-cpp-static PROPERTIES
 )
 
 find_package(fmt REQUIRED)
-find_package(spdlog REQUIRED)
 
 
 # -------------------------------------------------------------------
